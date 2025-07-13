@@ -1,0 +1,673 @@
+.game-result-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.game-result-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideIn {
+  from { 
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.result-icon {
+  font-size: 5rem;
+  animation: bounce 0.6s ease;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-8px);
+  }
+}
+
+.result-title {
+  font-size: 3rem;
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.result-content.win .result-title {
+  color: #2ecc71;
+  text-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+}
+
+.result-content.lose .result-title {
+  color: #e74c3c;
+  text-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+.result-content.draw .result-title {
+  color: #f39c12;
+  text-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+}
+
+.game-stats {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 15px;
+  padding: 2rem;
+  color: #555;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.game-stats p {
+  margin: 0.8rem 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.players-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  margin: 1rem 0;
+}
+
+.player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.player-symbol {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.player-symbol:hover {
+  transform: scale(1.1);
+}
+
+.player-symbol.x {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.player-symbol.o {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.player-name {
+  font-size: 1rem;
+  color: #555;
+  font-weight: 600;
+  text-align: center;
+  max-width: 100px;
+  word-wrap: break-word;
+}
+
+.vs {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #999;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.play-again-button {
+  padding: 1.2rem 2.5rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.play-again-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.play-again-button:active {
+  transform: translateY(-1px);
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .game-result-modal {
+    max-width: 600px;
+    padding: 4rem;
+  }
+  
+  .result-content {
+    gap: 3rem;
+  }
+  
+  .result-icon {
+    font-size: 6rem;
+  }
+  
+  .result-title {
+    font-size: 3.5rem;
+  }
+  
+  .game-stats {
+    padding: 2.5rem;
+  }
+  
+  .game-stats p {
+    font-size: 1.3rem;
+  }
+  
+  .players-summary {
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+  
+  .player-symbol {
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+  }
+  
+  .player-name {
+    font-size: 1.1rem;
+  }
+  
+  .vs {
+    font-size: 1.8rem;
+  }
+  
+  .play-again-button {
+    font-size: 1.3rem;
+    padding: 1.4rem 3rem;
+  }
+}
+
+/* Desktop (1024px - 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .game-result-modal {
+    max-width: 550px;
+    padding: 3.5rem;
+  }
+  
+  .result-content {
+    gap: 2.8rem;
+  }
+  
+  .result-icon {
+    font-size: 5.5rem;
+  }
+  
+  .result-title {
+    font-size: 3.2rem;
+  }
+  
+  .game-stats {
+    padding: 2.2rem;
+  }
+  
+  .game-stats p {
+    font-size: 1.25rem;
+  }
+  
+  .players-summary {
+    gap: 1.8rem;
+    padding: 1.8rem 0;
+  }
+  
+  .player-symbol {
+    width: 65px;
+    height: 65px;
+    font-size: 1.9rem;
+  }
+  
+  .player-name {
+    font-size: 1.05rem;
+  }
+  
+  .vs {
+    font-size: 1.6rem;
+  }
+  
+  .play-again-button {
+    font-size: 1.25rem;
+    padding: 1.3rem 2.8rem;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .game-result-modal {
+    max-width: 450px;
+    padding: 2.5rem;
+  }
+  
+  .result-content {
+    gap: 2.2rem;
+  }
+  
+  .result-icon {
+    font-size: 4.5rem;
+  }
+  
+  .result-title {
+    font-size: 2.5rem;
+  }
+  
+  .game-stats {
+    padding: 1.8rem;
+  }
+  
+  .game-stats p {
+    font-size: 1.1rem;
+  }
+  
+  .players-summary {
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+  }
+  
+  .player-symbol {
+    width: 55px;
+    height: 55px;
+    font-size: 1.6rem;
+  }
+  
+  .player-name {
+    font-size: 0.95rem;
+  }
+  
+  .vs {
+    font-size: 1.4rem;
+  }
+  
+  .play-again-button {
+    font-size: 1.1rem;
+    padding: 1.1rem 2.2rem;
+  }
+}
+
+/* Mobile Large (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .game-result-overlay {
+    padding: 0.5rem;
+  }
+  
+  .game-result-modal {
+    max-width: -webkit-fill-available;
+    padding: 2rem;
+    border-radius: 15px;
+  }
+  
+  .result-content {
+    gap: 2rem;
+  }
+  
+  .result-icon {
+    font-size: 4rem;
+  }
+  
+  .result-title {
+    font-size: 2.2rem;
+  }
+  
+  .game-stats {
+    padding: 1.5rem;
+  }
+  
+  .game-stats p {
+    font-size: 1rem;
+  }
+  
+  .players-summary {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .vs {
+    transform: rotate(90deg);
+    font-size: 1.3rem;
+  }
+  
+  .player-symbol {
+    width: 50px;
+    height: 50px;
+    font-size: 1.4rem;
+  }
+  
+  .player-name {
+    font-size: 0.9rem;
+    max-width: 120px;
+  }
+  
+  .result-actions {
+    gap: 1rem;
+  }
+  
+  .play-again-button {
+    font-size: 1rem;
+    padding: 1rem 2rem;
+  }
+}
+
+/* Mobile Small (320px - 479px) */
+@media (max-width: 479px) {
+  .game-result-overlay {
+    padding: 0.5rem;
+  }
+  
+  .game-result-modal {
+    max-width: -webkit-fill-available;
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+  
+  .result-content {
+    gap: 1.5rem;
+  }
+  
+  .result-icon {
+    font-size: 3rem;
+  }
+  
+  .result-title {
+    font-size: 1.8rem;
+  }
+  
+  .game-stats {
+    padding: 1.2rem;
+  }
+  
+  .game-stats p {
+    font-size: 0.9rem;
+    margin: 0.6rem 0;
+  }
+  
+  .players-summary {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .vs {
+    transform: rotate(90deg);
+    font-size: 1.2rem;
+  }
+  
+  .player-symbol {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  
+  .player-name {
+    font-size: 0.8rem;
+    max-width: 100px;
+  }
+  
+  .result-actions {
+    gap: 0.8rem;
+  }
+  
+  .play-again-button {
+    font-size: 0.9rem;
+    padding: 0.9rem 1.5rem;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+  .game-result-overlay {
+    padding: 0.5rem;
+  }
+  
+  .game-result-modal {
+    max-width: 90%;
+    max-height: 95vh;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  
+  .result-content {
+    gap: 1rem;
+  }
+  
+  .result-icon {
+    font-size: 2.5rem;
+  }
+  
+  .result-title {
+    font-size: 1.8rem;
+  }
+  
+  .game-stats {
+    padding: 1rem;
+  }
+  
+  .game-stats p {
+    font-size: 0.85rem;
+    margin: 0.4rem 0;
+  }
+  
+  .players-summary {
+    flex-direction: row;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .vs {
+    transform: none;
+    font-size: 1rem;
+  }
+  
+  .player-symbol {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .player-name {
+    font-size: 0.75rem;
+    max-width: 80px;
+  }
+  
+  .play-again-button {
+    font-size: 0.8rem;
+    padding: 0.8rem 1.2rem;
+  }
+}
+
+/* Touch devices optimization */
+@media (hover: none) and (pointer: coarse) {
+  .player-symbol:hover {
+    transform: none;
+  }
+  
+  .player-symbol:active {
+    transform: scale(0.95);
+  }
+  
+  .play-again-button:hover {
+    transform: none;
+  }
+  
+  .play-again-button:active {
+    transform: scale(0.98);
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  .result-title {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .player-symbol {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .game-result-overlay {
+    animation: none;
+  }
+  
+  .game-result-modal {
+    animation: none;
+  }
+  
+  .result-icon {
+    animation: none;
+  }
+  
+  .play-again-button:hover {
+    transform: none;
+  }
+  
+  .player-symbol:hover {
+    transform: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .game-result-modal {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .game-stats {
+    background: rgba(255, 255, 255, 0.05);
+    color: #c0c0c0;
+  }
+  
+  .players-summary {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  .player-name {
+    color: #c0c0c0;
+  }
+  
+  .vs {
+    color: #999;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 320px) {
+  .game-result-modal {
+    padding: 1rem;
+  }
+  
+  .result-content {
+    gap: 1rem;
+  }
+  
+  .result-icon {
+    font-size: 2.5rem;
+  }
+  
+  .result-title {
+    font-size: 1.5rem;
+  }
+  
+  .game-stats {
+    padding: 1rem;
+  }
+  
+  .game-stats p {
+    font-size: 0.8rem;
+    margin: 0.4rem 0;
+  }
+  
+  .players-summary {
+    padding: 0.8rem;
+  }
+  
+  .player-symbol {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .player-name {
+    font-size: 0.7rem;
+    max-width: 80px;
+  }
+  
+  .play-again-button {
+    font-size: 0.8rem;
+    padding: 0.8rem 1.2rem;
+  }
+} 

@@ -1,0 +1,11 @@
+/* TicTacToe Game Theme - Centralized CSS Imports */
+
+/* Global Styles */
+@import './global/index.css';
+@import './global/app.css';
+
+/* Game Component Styles */
+@import './components/game/GameBoard.css';
+@import './components/game/GameLobby.css';
+@import './components/game/WaitingRoom.css';
+@import './components/game/GameResult.css'; 
