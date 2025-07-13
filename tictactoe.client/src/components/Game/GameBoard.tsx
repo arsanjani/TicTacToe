@@ -6,7 +6,7 @@ interface GameBoardProps {
 }
 
 const GameBoard = ({ gameState }: GameBoardProps) => {
-  const { currentGame, makeMove, canMakeMove, isMyTurn, mySymbol } = gameState;
+  const { currentGame, makeMove, canMakeMove, isMyTurn, mySymbol, error } = gameState;
 
   const handleCellClick = (row: number, col: number) => {
     if (canMakeMove(row, col)) {
@@ -64,6 +64,18 @@ const GameBoard = ({ gameState }: GameBoardProps) => {
           </div>
         </div>
       </div>
+
+      {error && currentGame.state === 'Finished' && (
+        <div className="disconnection-overlay">
+          <div className="disconnection-message">
+            <div className="disconnection-icon">😱</div>
+            <h2>{error}</h2>
+            <button onClick={() => window.location.href = '/'} className="back-to-home-button">
+              Go to Home Page
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

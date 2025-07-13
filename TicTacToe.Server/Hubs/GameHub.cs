@@ -202,11 +202,16 @@ public class GameHub : Hub
             
             if (game != null)
             {
+                // Get the leaving player's name
+                var leavingPlayer = game.Player1?.Id == playerId ? game.Player1 : game.Player2;
+                var leavingPlayerName = leavingPlayer?.Name ?? "Unknown Player";
+
                 // Notify other players about disconnection
                 await Clients.OthersInGroup(game.Id).SendAsync("PlayerDisconnected", new
                 {
                     GameId = game.Id,
-                    PlayerId = playerId
+                    PlayerId = playerId,
+                    PlayerName = leavingPlayerName
                 });
 
                 // Remove player from game

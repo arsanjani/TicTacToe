@@ -140,7 +140,7 @@ export const useGameState = (): GameStateHook => {
   }, []);
 
   const handlePlayerDisconnected = useCallback((event: PlayerDisconnectedEvent) => {
-    setError(`Player disconnected from game ${event.gameId}`);
+    setError(`${event.playerName} scared of you and left the match`);
     setCurrentGame(prev => prev ? {
       ...prev,
       state: GameState.Finished

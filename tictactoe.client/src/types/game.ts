@@ -90,6 +90,7 @@ export interface GameResetEvent {
 export interface PlayerDisconnectedEvent {
   gameId: string;
   playerId: string;
+  playerName: string;
 }
 
 export interface GameError {
