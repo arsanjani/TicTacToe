@@ -15,12 +15,12 @@ public class GameHub : Hub
         _logger = logger;
     }
 
-    public async Task CreateGame(string playerName)
+    public async Task CreateGame(string playerName, bool isPrivate = false)
     {
         try
         {
             var playerId = Context.ConnectionId;
-            var game = await _gameService.CreateGameAsync(playerId, playerName);
+            var game = await _gameService.CreateGameAsync(playerId, playerName, isPrivate);
             
             // Join the game room
             await Groups.AddToGroupAsync(Context.ConnectionId, game.Id);
@@ -32,10 +32,11 @@ public class GameHub : Hub
                 PlayerId = playerId,
                 PlayerName = playerName,
                 Symbol = game.Player1?.Symbol,
-                State = game.State.ToString()
+                State = game.State.ToString(),
+                IsPrivate = game.IsPrivate
             });
 
-            _logger.LogInformation($"Game {game.Id} created by player {playerName}");
+            _logger.LogInformation($"Game {game.Id} created by player {playerName} (Private: {isPrivate})");
         }
         catch (Exception ex)
         {
@@ -142,7 +143,8 @@ public class GameHub : Hub
             {
                 GameId = g.Id,
                 Player1Name = g.Player1?.Name,
-                CreatedAt = g.CreatedAt
+                CreatedAt = g.CreatedAt,
+                IsPrivate = g.IsPrivate
             }).ToList();
 
             await Clients.Caller.SendAsync("WaitingGames", gamesList);

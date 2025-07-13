@@ -10,16 +10,23 @@ import './theme/global/app.css';
 function App() {
     const gameState = useGameState();
     const [isConnecting, setIsConnecting] = useState(true);
+    const [isJoinMode, setIsJoinMode] = useState(false);
+    const [joinGameId, setJoinGameId] = useState<string | null>(null);
 
     useEffect(() => {
+        // Check if there's a gameId in the URL for direct joining
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get('gameId');
+        if (gameId) {
+            setIsJoinMode(true);
+            setJoinGameId(gameId);
+        }
+
         // Connect to the game hub when the app starts
         gameState.connect()
             .then(() => {
                 setIsConnecting(false);
                 
-                // Check if there's a gameId in the URL for direct joining
-                const urlParams = new URLSearchParams(window.location.search);
-                const gameId = urlParams.get('gameId');
                 if (gameId) {
                     // You could implement auto-join logic here
                     console.log('Game ID found in URL:', gameId);
@@ -67,8 +74,16 @@ function App() {
     if (!gameState.currentGame) {
         return (
             <div className="app">
-                <GameLobby gameState={gameState} />
-                <WaitingRoom gameState={gameState} />
+                {isJoinMode ? (
+                    // Show only Join a Game card when coming from join link
+                    <WaitingRoom gameState={gameState} joinGameId={joinGameId} />
+                ) : (
+                    // Show both cards for normal visits
+                    <>
+                        <GameLobby gameState={gameState} />
+                        <WaitingRoom gameState={gameState} />
+                    </>
+                )}
             </div>
         );
     }
@@ -87,7 +102,7 @@ function App() {
         <div className="app">
             <div className="game-container">
                 <div className="game-header">
-                    <h1>🎮 Tic Tac Toe</h1>
+                    <h1>🎮 <span>Tic Tac Toe</span></h1>
                     <div className="players-info">
                         <div className="player-info">
                             <span className="player-name">{gameState.currentGame.player1?.name}</span>

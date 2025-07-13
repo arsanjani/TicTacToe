@@ -19,6 +19,7 @@ export interface Game {
   startedAt: Date | null;
   endedAt: Date | null;
   moveCount: number;
+  isPrivate: boolean;
 }
 
 export const GameState = {
@@ -42,6 +43,7 @@ export interface GameListItem {
   gameId: string;
   player1Name: string;
   createdAt: Date;
+  isPrivate: boolean;
 }
 
 export interface GameCreatedEvent {
@@ -50,6 +52,7 @@ export interface GameCreatedEvent {
   playerName: string;
   symbol: 'X' | 'O';
   state: string;
+  isPrivate: boolean;
 }
 
 export interface GameStartedEvent {

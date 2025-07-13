@@ -5,7 +5,7 @@ namespace TicTacToe.Server.Services;
 
 public interface IGameService
 {
-    Task<Game> CreateGameAsync(string playerId, string playerName);
+    Task<Game> CreateGameAsync(string playerId, string playerName, bool isPrivate = false);
     Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName);
     Task<Game?> GetGameAsync(string gameId);
     Task<Game?> GetGameByPlayerAsync(string playerId);
@@ -20,7 +20,7 @@ public class GameService : IGameService
     private readonly ConcurrentDictionary<string, Game> _games = new();
     private readonly ConcurrentDictionary<string, string> _playerToGame = new();
 
-    public async Task<Game> CreateGameAsync(string playerId, string playerName)
+    public async Task<Game> CreateGameAsync(string playerId, string playerName, bool isPrivate = false)
     {
         var game = new Game
         {
@@ -33,7 +33,8 @@ public class GameService : IGameService
                 Symbol = 'X',
                 IsReady = true
             },
-            State = GameState.WaitingForPlayers
+            State = GameState.WaitingForPlayers,
+            IsPrivate = isPrivate
         };
 
         _games[game.Id] = game;

@@ -10,31 +10,32 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
   const { createGame, isConnected, error } = gameState;
   const [playerName, setPlayerName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const handleCreateGame = async () => {
     if (!playerName.trim()) return;
     
     setIsCreating(true);
     try {
-      await createGame(playerName.trim());
+      await createGame(playerName.trim(), isPrivate);
     } finally {
       setIsCreating(false);
     }
   };
 
   return (
-    <div className="game-lobby">
+    <div className="lobby-game-lobby">
       <div className="lobby-container">
         <div className="lobby-header">
-          <h1>🎮 Tic Tac Toe</h1>
+          <h1>🎮 <span>Tic Tac Toe</span></h1>
           <p className="lobby-subtitle">Challenge your friends to a classic game!</p>
         </div>
 
         <div className="lobby-content">
-          <div className="create-game-section">
+          <div className="lobby-create-game-section">
             <h2>Create New Game</h2>
-            <div className="player-setup">
-              <div className="input-group">
+            <div className="lobby-player-setup">
+              <div className="lobby-input-group">
                 <label htmlFor="playerName">Your Name</label>
                 <input
                   id="playerName"
@@ -42,23 +43,43 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
                   placeholder="Enter your name"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="player-name-input"
+                  className="lobby-player-name-input"
                   maxLength={20}
                   disabled={!isConnected}
                 />
               </div>
               
+              <div className="lobby-input-group">
+                <label htmlFor="privateSwitch" className="lobby-switch-label">
+                  <span>Private Game</span>
+                  <div className="lobby-switch-container">
+                    <input
+                      id="privateSwitch"
+                      type="checkbox"
+                      checked={isPrivate}
+                      onChange={(e) => setIsPrivate(e.target.checked)}
+                      className="lobby-switch-input"
+                      disabled={!isConnected}
+                    />
+                    <div className="lobby-switch-slider"></div>
+                  </div>
+                </label>
+                <p className="lobby-switch-description">
+                  {isPrivate ? 'Only accessible via share link' : 'Visible in public game list'}
+                </p>
+              </div>
+              
               <button
                 onClick={handleCreateGame}
                 disabled={!playerName.trim() || isCreating || !isConnected}
-                className="create-game-button"
+                className="lobby-create-game-button"
               >
                 {isCreating ? 'Creating...' : 'Create Game'}
               </button>
             </div>
           </div>
 
-          <div className="game-rules">
+          <div className="lobby-game-rules">
             <h3>How to Play</h3>
             <ul>
               <li>🎯 Get three of your symbols in a row (horizontal, vertical, or diagonal)</li>
@@ -69,13 +90,13 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
           </div>
 
           {error && (
-            <div className="error-message">
+            <div className="lobby-error-message">
               <p>{error}</p>
             </div>
           )}
 
           {!isConnected && (
-            <div className="connection-status">
+            <div className="lobby-connection-status">
               <p>Connecting to game server...</p>
             </div>
           )}

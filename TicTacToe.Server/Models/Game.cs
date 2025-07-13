@@ -13,6 +13,7 @@ public class Game
     public DateTime? StartedAt { get; set; }
     public DateTime? EndedAt { get; set; }
     public int MoveCount { get; set; } = 0;
+    public bool IsPrivate { get; set; } = false;
 
     public bool IsPlayerTurn(string playerId)
     {

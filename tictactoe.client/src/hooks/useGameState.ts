@@ -26,7 +26,7 @@ export interface GameStateHook {
   // Game actions
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
-  createGame: (playerName: string) => Promise<void>;
+  createGame: (playerName: string, isPrivate?: boolean) => Promise<void>;
   joinGame: (gameId: string, playerName: string) => Promise<void>;
   makeMove: (row: number, col: number) => Promise<void>;
   getWaitingGames: () => Promise<void>;
@@ -72,7 +72,8 @@ export const useGameState = (): GameStateHook => {
       createdAt: new Date(),
       startedAt: null,
       endedAt: null,
-      moveCount: 0
+      moveCount: 0,
+      isPrivate: event.isPrivate
     });
   }, []);
 
@@ -102,7 +103,8 @@ export const useGameState = (): GameStateHook => {
         createdAt: new Date(), // We don't have the original timestamp; use "now" for reference
         startedAt: new Date(),
         endedAt: null,
-        moveCount: 0
+        moveCount: 0,
+        isPrivate: false // Default to false for joiners since we don't have this info in the event
       };
     });
   }, []);
@@ -209,9 +211,9 @@ export const useGameState = (): GameStateHook => {
   }, []);
 
   // Game actions
-  const createGame = useCallback(async (playerName: string) => {
+  const createGame = useCallback(async (playerName: string, isPrivate: boolean = false) => {
     try {
-      await gameService.createGame(playerName);
+      await gameService.createGame(playerName, isPrivate);
       setError(null);
     } catch (error) {
       setError(`Failed to create game: ${error}`);

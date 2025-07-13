@@ -94,13 +94,13 @@ export class GameService {
     }
   }
 
-  async createGame(playerName: string): Promise<void> {
+  async createGame(playerName: string, isPrivate: boolean = false): Promise<void> {
     if (!this.isConnected) {
       throw new Error('Not connected to game hub');
     }
 
     try {
-      await this.connection.invoke('CreateGame', playerName);
+      await this.connection.invoke('CreateGame', playerName, isPrivate);
     } catch (error) {
       console.error('Failed to create game:', error);
       throw error;

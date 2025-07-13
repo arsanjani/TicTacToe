@@ -1,11 +1,14 @@
 ﻿.app {
   min-height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 2rem;
   box-sizing: border-box;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  gap: 2rem;
 }
 
 .app-loading,
@@ -119,8 +122,10 @@
   font-weight: 700;
   background: linear-gradient(135deg, #fff, #e3f2fd);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  span {
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 .players-info {
@@ -705,8 +710,10 @@
   .game-header h1 {
     background: linear-gradient(135deg, #e0e0e0, #b0b0b0);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    span {
+      -webkit-text-fill-color: transparent;
+    }
   }
   
   .players-info {

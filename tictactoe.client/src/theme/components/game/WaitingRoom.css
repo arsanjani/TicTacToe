@@ -2,9 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
+  width: 100%;
+  padding: 0;
 }
 
 .waiting-container {
@@ -34,13 +33,13 @@
   background-clip: text;
 }
 
-.spinner {
+.waiting-spinner {
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
 }
 
-.spinner-circle {
+.waiting-spinner-circle {
   width: 60px;
   height: 60px;
   border: 4px solid #f3f3f3;
@@ -55,7 +54,7 @@
   100% { transform: rotate(360deg); }
 }
 
-.game-info {
+.waiting-game-info {
   background: rgba(102, 126, 234, 0.1);
   border-radius: 15px;
   padding: 2rem;
@@ -65,13 +64,13 @@
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
 }
 
-.game-info p {
+.waiting-game-info p {
   margin: 0.7rem 0;
   font-size: 1.2rem;
   font-weight: 500;
 }
 
-.game-id {
+.waiting-game-id {
   font-family: 'Courier New', monospace;
   background: rgba(255, 255, 255, 0.9);
   padding: 0.4rem 0.8rem;
@@ -82,24 +81,24 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.share-section {
+.waiting-share-section {
   margin-bottom: 2.5rem;
 }
 
-.share-section h3 {
+.waiting-share-section h3 {
   color: #333;
   margin-bottom: 1.5rem;
   font-size: 1.4rem;
   font-weight: 600;
 }
 
-.share-link {
+.waiting-share-link {
   display: flex;
   gap: 0.7rem;
   margin-bottom: 1.5rem;
 }
 
-.share-input {
+.waiting-share-input {
   flex: 1;
   padding: 1rem;
   border: 2px solid #ddd;
@@ -110,13 +109,13 @@
   transition: all 0.3s ease;
 }
 
-.share-input:focus {
+.waiting-share-input:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.copy-button {
+.waiting-copy-button {
   padding: 1rem 2rem;
   background: #667eea;
   color: white;
@@ -129,13 +128,13 @@
   white-space: nowrap;
 }
 
-.copy-button:hover {
+.waiting-copy-button:hover {
   background: #5a67d8;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.copy-button:active {
+.waiting-copy-button:active {
   transform: translateY(0);
 }
 
@@ -147,11 +146,11 @@
 }
 
 /* Join Game Styles */
-.join-section {
+.waiting-join-section {
   margin-bottom: 2.5rem;
 }
 
-.join-section h2 {
+.waiting-join-section h2 {
   color: #333;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
@@ -162,13 +161,13 @@
   background-clip: text;
 }
 
-.name-input {
+.waiting-name-input {
   margin-bottom: 2.5rem;
+  display: flex;
 }
 
-.player-name-input {
+.waiting-player-name-input {
   width: 100%;
-  max-width: 400px;
   padding: 1.2rem;
   border: 2px solid #ddd;
   border-radius: 12px;
@@ -179,21 +178,21 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.player-name-input:focus {
+.waiting-player-name-input:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
   transform: translateY(-1px);
 }
 
-.games-list h3 {
+.waiting-games-list h3 {
   color: #333;
   margin-bottom: 2rem;
   font-size: 1.5rem;
   font-weight: 600;
 }
 
-.no-games {
+.waiting-no-games {
   color: #666;
   padding: 3rem;
   background: rgba(0, 0, 0, 0.05);
@@ -201,19 +200,19 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.no-games p {
+.waiting-no-games p {
   margin: 0.7rem 0;
   font-size: 1.1rem;
 }
 
-.games-grid {
+.waiting-games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
 
-.game-card {
+.waiting-game-card {
   background: white;
   border-radius: 15px;
   padding: 2rem;
@@ -222,12 +221,12 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.game-card:hover {
+.waiting-game-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.game-card-header {
+.waiting-game-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -236,7 +235,7 @@
   gap: 1rem;
 }
 
-.game-card-header h4 {
+.waiting-game-card-header h4 {
   color: #333;
   margin: 0;
   font-size: 1.4rem;
@@ -260,17 +259,49 @@
   100% { opacity: 1; transform: scale(1); }
 }
 
-.game-card-info {
+.waiting-game-card-info {
   color: #666;
   margin-bottom: 1.5rem;
 }
 
-.game-card-info p {
+.waiting-game-card-info p {
   margin: 0;
   font-size: 1rem;
 }
 
-.join-button {
+.waiting-private-indicator {
+  color: #ff6b6b;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.waiting-private-game-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 107, 107, 0.3);
+  margin-top: 1rem;
+}
+
+.waiting-lock-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #ff6b6b;
+}
+
+.waiting-private-game-indicator p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.waiting-join-button {
   width: 100%;
   padding: 1rem;
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -286,28 +317,28 @@
   letter-spacing: 0.5px;
 }
 
-.join-button:hover:not(:disabled) {
+.waiting-join-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #5a67d8, #6b63b5);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.join-button:active:not(:disabled) {
+.waiting-join-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.join-button:disabled {
+.waiting-join-button:disabled {
   background: #ccc;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.refresh-section {
+.waiting-refresh-section {
   margin-top: 2.5rem;
 }
 
-.refresh-button {
+.waiting-refresh-button {
   padding: 1rem 2.5rem;
   background: transparent;
   color: #667eea;
@@ -320,14 +351,14 @@
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
 }
 
-.refresh-button:hover {
+.waiting-refresh-button:hover {
   background: #667eea;
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.refresh-button:active {
+.waiting-refresh-button:active {
   transform: translateY(0);
 }
 
@@ -343,33 +374,33 @@
   }
   
   .waiting-header h2,
-  .join-section h2 {
+  .waiting-join-section h2 {
     font-size: 3rem;
   }
   
-  .game-info p {
+  .waiting-game-info p {
     font-size: 1.3rem;
   }
   
-  .player-name-input {
+  .waiting-player-name-input {
     font-size: 1.3rem;
     padding: 1.4rem;
   }
   
-  .games-grid {
+  .waiting-games-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
   }
   
-  .game-card {
+  .waiting-game-card {
     padding: 2.5rem;
   }
   
-  .game-card-header h4 {
+  .waiting-game-card-header h4 {
     font-size: 1.5rem;
   }
   
-  .join-button {
+  .waiting-join-button {
     font-size: 1.2rem;
     padding: 1.2rem;
   }
@@ -387,29 +418,29 @@
   }
   
   .waiting-header h2,
-  .join-section h2 {
+  .waiting-join-section h2 {
     font-size: 2.8rem;
   }
   
-  .game-info p {
+  .waiting-game-info p {
     font-size: 1.25rem;
   }
   
-  .player-name-input {
+  .waiting-player-name-input {
     font-size: 1.25rem;
     padding: 1.3rem;
   }
   
-  .games-grid {
+  .waiting-games-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.8rem;
   }
   
-  .game-card {
+  .waiting-game-card {
     padding: 2.2rem;
   }
   
-  .join-button {
+  .waiting-join-button {
     font-size: 1.15rem;
     padding: 1.1rem;
   }
@@ -427,29 +458,29 @@
   }
   
   .waiting-header h2,
-  .join-section h2 {
+  .waiting-join-section h2 {
     font-size: 2.2rem;
   }
   
-  .game-info p {
+  .waiting-game-info p {
     font-size: 1.1rem;
   }
   
-  .player-name-input {
+  .waiting-player-name-input {
     font-size: 1.1rem;
     padding: 1.1rem;
   }
   
-  .games-grid {
+  .waiting-games-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
   }
   
-  .game-card {
+  .waiting-game-card {
     padding: 1.8rem;
   }
   
-  .join-button {
+  .waiting-join-button {
     font-size: 1.05rem;
     padding: 1rem;
   }
@@ -462,7 +493,7 @@
   }
   
   .waiting-container {
-    max-width: -webkit-fill-available;
+    max-width: 100%;
     padding: 2rem;
     border-radius: 15px;
   }
@@ -476,67 +507,67 @@
     font-size: 2rem;
   }
   
-  .spinner-circle {
+  .waiting-spinner-circle {
     width: 50px;
     height: 50px;
   }
   
-  .game-info {
+  .waiting-game-info {
     padding: 1.5rem;
     margin-bottom: 2rem;
   }
   
-  .game-info p {
+  .waiting-game-info p {
     font-size: 1rem;
   }
   
-  .share-section {
+  .waiting-share-section {
     margin-bottom: 2rem;
   }
   
-  .share-section h3 {
+  .waiting-share-section h3 {
     font-size: 1.2rem;
   }
   
-  .share-link {
+  .waiting-share-link {
     flex-direction: column;
     gap: 1rem;
   }
   
-  .copy-button {
+  .waiting-copy-button {
     width: 100%;
   }
   
-  .name-input {
+  .waiting-name-input {
     margin-bottom: 2rem;
+    display: flex;
   }
   
-  .player-name-input {
-    max-width: -webkit-fill-available;
+  .waiting-player-name-input {
     font-size: 1rem;
     padding: 1rem;
   }
   
-  .games-list h3 {
+  .waiting-games-list h3 {
     font-size: 1.3rem;
   }
   
-  .games-grid {
+  .waiting-games-grid {
     grid-template-columns: 1fr;
     gap: 1.2rem;
   }
   
-  .game-card {
+  .waiting-game-card {
     padding: 1.5rem;
   }
   
-  .game-card-header {
+  .waiting-game-card-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.8rem;
   }
   
-  .game-card-header h4 {
+  .waiting-game-card-header h4 {
     font-size: 1.2rem;
   }
   
@@ -544,12 +575,12 @@
     align-self: flex-start;
   }
   
-  .join-button {
+  .waiting-join-button {
     font-size: 1rem;
     padding: 0.9rem;
   }
   
-  .refresh-button {
+  .waiting-refresh-button {
     font-size: 1rem;
     padding: 0.9rem 2rem;
   }
@@ -572,91 +603,91 @@
   }
   
   .waiting-header h2,
-  .join-section h2 {
+  .waiting-join-section h2 {
     font-size: 1.8rem;
   }
   
-  .spinner-circle {
+  .waiting-spinner-circle {
     width: 40px;
     height: 40px;
   }
   
-  .game-info {
+  .waiting-game-info {
     padding: 1.2rem;
     margin-bottom: 1.5rem;
   }
   
-  .game-info p {
+  .waiting-game-info p {
     font-size: 0.9rem;
   }
   
-  .game-id {
+  .waiting-game-id {
     font-size: 0.8rem;
     padding: 0.3rem 0.6rem;
   }
   
-  .share-section {
+  .waiting-share-section {
     margin-bottom: 1.5rem;
   }
   
-  .share-section h3 {
+  .waiting-share-section h3 {
     font-size: 1.1rem;
   }
   
-  .share-link {
+  .waiting-share-link {
     flex-direction: column;
     gap: 0.8rem;
   }
   
-  .share-input {
+  .waiting-share-input {
     padding: 0.8rem;
     font-size: 0.9rem;
   }
   
-  .copy-button {
+  .waiting-copy-button {
     width: 100%;
     padding: 0.8rem;
     font-size: 0.9rem;
   }
   
-  .name-input {
+  .waiting-name-input {
     margin-bottom: 1.5rem;
+    display: flex;
   }
   
-  .player-name-input {
-    max-width: -webkit-fill-available;
+  .waiting-player-name-input {
     font-size: 0.9rem;
     padding: 0.9rem;
   }
   
-  .games-list h3 {
+  .waiting-games-list h3 {
     font-size: 1.2rem;
   }
   
-  .no-games {
+  .waiting-no-games {
     padding: 2rem;
   }
   
-  .no-games p {
+  .waiting-no-games p {
     font-size: 1rem;
   }
   
-  .games-grid {
+  .waiting-games-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  .game-card {
+  .waiting-game-card {
     padding: 1.2rem;
   }
   
-  .game-card-header {
+  .waiting-game-card-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.6rem;
   }
   
-  .game-card-header h4 {
+  .waiting-game-card-header h4 {
     font-size: 1.1rem;
   }
   
@@ -666,16 +697,16 @@
     padding: 0.3rem 0.8rem;
   }
   
-  .game-card-info p {
+  .waiting-game-card-info p {
     font-size: 0.9rem;
   }
   
-  .join-button {
+  .waiting-join-button {
     font-size: 0.9rem;
     padding: 0.8rem;
   }
   
-  .refresh-button {
+  .waiting-refresh-button {
     font-size: 0.9rem;
     padding: 0.8rem 1.5rem;
   }
@@ -704,69 +735,70 @@
   }
   
   .waiting-header h2,
-  .join-section h2 {
+  .waiting-join-section h2 {
     font-size: 1.5rem;
   }
   
-  .spinner-circle {
+  .waiting-spinner-circle {
     width: 30px;
     height: 30px;
   }
   
-  .game-info {
+  .waiting-game-info {
     padding: 1rem;
     margin-bottom: 1rem;
   }
   
-  .share-section {
+  .waiting-share-section {
     margin-bottom: 1rem;
   }
   
-  .name-input {
+  .waiting-name-input {
     margin-bottom: 1rem;
+    display: flex;
   }
   
-  .games-grid {
+  .waiting-games-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
   }
   
-  .game-card {
+  .waiting-game-card {
     padding: 1rem;
   }
   
-  .game-card-header h4 {
+  .waiting-game-card-header h4 {
     font-size: 1rem;
   }
   
-  .refresh-section {
+  .waiting-refresh-section {
     margin-top: 1rem;
   }
 }
 
 /* Touch devices optimization */
 @media (hover: none) and (pointer: coarse) {
-  .copy-button:hover,
-  .join-button:hover:not(:disabled),
-  .refresh-button:hover {
+  .waiting-copy-button:hover,
+  .waiting-join-button:hover:not(:disabled),
+  .waiting-refresh-button:hover {
     transform: none;
   }
   
-  .copy-button:active,
-  .join-button:active:not(:disabled),
-  .refresh-button:active {
+  .waiting-copy-button:active,
+  .waiting-join-button:active:not(:disabled),
+  .waiting-refresh-button:active {
     transform: scale(0.98);
   }
   
-  .game-card:hover {
+  .waiting-game-card:hover {
     transform: none;
   }
   
-  .game-card:active {
+  .waiting-game-card:active {
     transform: scale(0.98);
   }
   
-  .player-name-input:focus {
+  .waiting-player-name-input:focus {
     transform: none;
   }
 }
@@ -782,7 +814,7 @@
 
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
-  .spinner-circle {
+  .waiting-spinner-circle {
     animation: none;
   }
   
@@ -790,14 +822,14 @@
     animation: none;
   }
   
-  .copy-button:hover,
-  .join-button:hover:not(:disabled),
-  .refresh-button:hover,
-  .game-card:hover {
+  .waiting-copy-button:hover,
+  .waiting-join-button:hover:not(:disabled),
+  .waiting-refresh-button:hover,
+  .waiting-game-card:hover {
     transform: none;
   }
   
-  .player-name-input:focus {
+  .waiting-player-name-input:focus {
     transform: none;
   }
 }
@@ -811,52 +843,52 @@
   }
   
   .waiting-header h2,
-  .join-section h2 {
+  .waiting-join-section h2 {
     color: #e0e0e0;
   }
   
-  .game-info {
+  .waiting-game-info {
     background: rgba(102, 126, 234, 0.15);
     border: 1px solid rgba(102, 126, 234, 0.3);
     color: #e0e0e0;
   }
   
-  .game-id {
+  .waiting-game-id {
     background: rgba(255, 255, 255, 0.1);
     color: #e0e0e0;
   }
   
-  .share-section h3,
-  .games-list h3 {
+  .waiting-share-section h3,
+  .waiting-games-list h3 {
     color: #e0e0e0;
   }
   
-  .share-input,
-  .player-name-input {
+  .waiting-share-input,
+  .waiting-player-name-input {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     color: #e0e0e0;
   }
   
-  .share-input::placeholder,
-  .player-name-input::placeholder {
+  .waiting-share-input::placeholder,
+  .waiting-player-name-input::placeholder {
     color: #999;
   }
   
-  .game-card {
+  .waiting-game-card {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
-  .game-card-header h4 {
+  .waiting-game-card-header h4 {
     color: #e0e0e0;
   }
   
-  .game-card-info {
+  .waiting-game-card-info {
     color: #c0c0c0;
   }
   
-  .no-games {
+  .waiting-no-games {
     background: rgba(255, 255, 255, 0.05);
     color: #c0c0c0;
   }
