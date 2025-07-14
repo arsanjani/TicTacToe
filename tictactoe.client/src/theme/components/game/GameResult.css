@@ -10,7 +10,7 @@
   align-items: center;
   z-index: 1000;
   animation: fadeIn 0.3s ease;
-  padding: 1rem;
+  padding: 0.5rem;
   box-sizing: border-box;
 }
 
@@ -21,9 +21,9 @@
 
 .game-result-modal {
   background: white;
-  border-radius: 20px;
-  padding: 3rem;
-  max-width: 500px;
+  border-radius: 15px;
+  padding: 1.5rem;
+  max-width: 400px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
@@ -47,11 +47,11 @@
 .result-content {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.2rem;
 }
 
 .result-icon {
-  font-size: 5rem;
+  font-size: 3rem;
   animation: bounce 0.6s ease;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -69,7 +69,7 @@
 }
 
 .result-title {
-  font-size: 3rem;
+  font-size: 2rem;
   margin: 0;
   font-weight: 700;
   line-height: 1.2;
@@ -92,15 +92,15 @@
 
 .game-stats {
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 15px;
-  padding: 2rem;
+  border-radius: 10px;
+  padding: 1rem;
   color: #555;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .game-stats p {
-  margin: 0.8rem 0;
-  font-size: 1.2rem;
+  margin: 0.4rem 0;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -108,29 +108,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem 0;
+  gap: 1rem;
+  padding: 1rem 0;
   background: rgba(0, 0, 0, 0.03);
-  border-radius: 12px;
-  margin: 1rem 0;
+  border-radius: 10px;
+  margin: 0.5rem 0;
 }
 
 .player-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.5rem;
   flex: 1;
 }
 
 .player-symbol {
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -150,17 +150,17 @@
 }
 
 .player-name {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #555;
   font-weight: 600;
   text-align: center;
   max-width: 100px;
   word-wrap: break-word;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .vs {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: #999;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -169,17 +169,17 @@
 .result-actions {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .play-again-button {
-  padding: 1.2rem 2.5rem;
+  padding: 0.8rem 1.5rem;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 1.2rem;
+  border-radius: 10px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -198,12 +198,12 @@
 }
 
 .result-leave-game-button {
-  padding: 1.2rem 2.5rem;
+  padding: 0.8rem 1.5rem;
   background: linear-gradient(135deg, #e74c3c, #c0392b);
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 1.2rem;
+  border-radius: 10px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -233,29 +233,29 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  border-radius: 20px;
+  border-radius: 15px;
   backdrop-filter: blur(5px);
 }
 
 .disconnection-message {
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-  padding: 2rem;
-  border-radius: 15px;
+  padding: 1.5rem;
+  border-radius: 12px;
   text-align: center;
   color: white;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
+  max-width: 350px;
   animation: slideIn 0.3s ease-out;
 }
 
 .disconnection-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
 }
 
 .disconnection-message h2 {
-  font-size: 1.5rem;
-  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  margin: 0 0 1rem 0;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -264,9 +264,9 @@
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.3);
   color: white;
-  padding: 0.75rem 2rem;
-  border-radius: 25px;
-  font-size: 1rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -293,130 +293,16 @@
 /* Large Desktop (1440px+) */
 @media (min-width: 1440px) {
   .game-result-modal {
-    max-width: 600px;
-    padding: 4rem;
-  }
-  
-  .result-content {
-    gap: 3rem;
-  }
-  
-  .result-icon {
-    font-size: 6rem;
-  }
-  
-  .result-title {
-    font-size: 3.5rem;
-  }
-  
-  .game-stats {
-    padding: 2.5rem;
-  }
-  
-  .game-stats p {
-    font-size: 1.3rem;
-  }
-  
-  .players-summary {
-    gap: 2rem;
-    padding: 2rem 0;
-  }
-  
-  .player-symbol {
-    width: 70px;
-    height: 70px;
-    font-size: 2rem;
-  }
-  
-  .player-name {
-    font-size: 1.1rem;
-  }
-  
-  .vs {
-    font-size: 1.8rem;
-  }
-  
-  .play-again-button {
-    font-size: 1.3rem;
-    padding: 1.4rem 3rem;
-  }
-  
-  .result-leave-game-button {
-    font-size: 1.3rem;
-    padding: 1.4rem 3rem;
-  }
-}
-
-/* Desktop (1024px - 1439px) */
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .game-result-modal {
-    max-width: 550px;
-    padding: 3.5rem;
-  }
-  
-  .result-content {
-    gap: 2.8rem;
-  }
-  
-  .result-icon {
-    font-size: 5.5rem;
-  }
-  
-  .result-title {
-    font-size: 3.2rem;
-  }
-  
-  .game-stats {
-    padding: 2.2rem;
-  }
-  
-  .game-stats p {
-    font-size: 1.25rem;
-  }
-  
-  .players-summary {
-    gap: 1.8rem;
-    padding: 1.8rem 0;
-  }
-  
-  .player-symbol {
-    width: 65px;
-    height: 65px;
-    font-size: 1.9rem;
-  }
-  
-  .player-name {
-    font-size: 1.05rem;
-  }
-  
-  .vs {
-    font-size: 1.6rem;
-  }
-  
-  .play-again-button {
-    font-size: 1.25rem;
-    padding: 1.3rem 2.8rem;
-  }
-  
-  .result-leave-game-button {
-    font-size: 1.25rem;
-    padding: 1.3rem 2.8rem;
-  }
-}
-
-/* Tablet (768px - 1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .game-result-modal {
     max-width: 450px;
-    padding: 2.5rem;
+    padding: 2rem;
   }
   
   .result-content {
-    gap: 2.2rem;
+    gap: 1.5rem;
   }
   
   .result-icon {
-    font-size: 4.5rem;
+    font-size: 3.5rem;
   }
   
   .result-title {
@@ -424,7 +310,7 @@
   }
   
   .game-stats {
-    padding: 1.8rem;
+    padding: 1.5rem;
   }
   
   .game-stats p {
@@ -439,11 +325,11 @@
   .player-symbol {
     width: 55px;
     height: 55px;
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
   
   .player-name {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
   
   .vs {
@@ -452,12 +338,126 @@
   
   .play-again-button {
     font-size: 1.1rem;
-    padding: 1.1rem 2.2rem;
+    padding: 1rem 2rem;
   }
   
   .result-leave-game-button {
     font-size: 1.1rem;
-    padding: 1.1rem 2.2rem;
+    padding: 1rem 2rem;
+  }
+}
+
+/* Desktop (1024px - 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .game-result-modal {
+    max-width: 420px;
+    padding: 1.8rem;
+  }
+  
+  .result-content {
+    gap: 1.4rem;
+  }
+  
+  .result-icon {
+    font-size: 3.2rem;
+  }
+  
+  .result-title {
+    font-size: 2.2rem;
+  }
+  
+  .game-stats {
+    padding: 1.3rem;
+  }
+  
+  .game-stats p {
+    font-size: 1.05rem;
+  }
+  
+  .players-summary {
+    gap: 1.2rem;
+    padding: 1.2rem 0;
+  }
+  
+  .player-symbol {
+    width: 50px;
+    height: 50px;
+    font-size: 1.6rem;
+  }
+  
+  .player-name {
+    font-size: 0.95rem;
+  }
+  
+  .vs {
+    font-size: 1.3rem;
+  }
+  
+  .play-again-button {
+    font-size: 1.05rem;
+    padding: 0.9rem 1.8rem;
+  }
+  
+  .result-leave-game-button {
+    font-size: 1.05rem;
+    padding: 0.9rem 1.8rem;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .game-result-modal {
+    max-width: 380px;
+    padding: 1.5rem;
+  }
+  
+  .result-content {
+    gap: 1.2rem;
+  }
+  
+  .result-icon {
+    font-size: 2.8rem;
+  }
+  
+  .result-title {
+    font-size: 1.9rem;
+  }
+  
+  .game-stats {
+    padding: 1.2rem;
+  }
+  
+  .game-stats p {
+    font-size: 1rem;
+  }
+  
+  .players-summary {
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+  
+  .player-symbol {
+    width: 45px;
+    height: 45px;
+    font-size: 1.4rem;
+  }
+  
+  .player-name {
+    font-size: 0.9rem;
+  }
+  
+  .vs {
+    font-size: 1.2rem;
+  }
+  
+  .play-again-button {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  .result-leave-game-button {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
   }
 }
 
@@ -469,64 +469,64 @@
   
   .game-result-modal {
     max-width: -webkit-fill-available;
-    padding: 2rem;
-    border-radius: 15px;
+    padding: 1.2rem;
+    border-radius: 12px;
   }
   
   .result-content {
-    gap: 2rem;
+    gap: 1rem;
   }
   
   .result-icon {
-    font-size: 4rem;
+    font-size: 2.5rem;
   }
   
   .result-title {
-    font-size: 2.2rem;
+    font-size: 1.7rem;
   }
   
   .game-stats {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .game-stats p {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   
   .players-summary {
     flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: 1rem;
+    padding: 1rem;
   }
   
   .vs {
     transform: rotate(90deg);
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
   
   .player-symbol {
-    width: 50px;
-    height: 50px;
-    font-size: 1.4rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
   }
   
   .player-name {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     max-width: 120px;
   }
   
   .result-actions {
-    gap: 1rem;
+    gap: 0.8rem;
   }
   
   .play-again-button {
-    font-size: 1rem;
-    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    padding: 0.8rem 1.2rem;
   }
   
   .result-leave-game-button {
-    font-size: 1rem;
-    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    padding: 0.8rem 1.2rem;
   }
 }
 
@@ -538,110 +538,39 @@
   
   .game-result-modal {
     max-width: -webkit-fill-available;
-    padding: 1.5rem;
-    border-radius: 12px;
+    padding: 1rem;
+    border-radius: 10px;
   }
   
   .result-content {
-    gap: 1.5rem;
+    gap: 0.8rem;
   }
   
   .result-icon {
-    font-size: 3rem;
+    font-size: 2.2rem;
   }
   
   .result-title {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
   
   .game-stats {
-    padding: 1.2rem;
+    padding: 0.8rem;
   }
   
   .game-stats p {
-    font-size: 0.9rem;
-    margin: 0.6rem 0;
+    font-size: 0.8rem;
+    margin: 0.3rem 0;
   }
   
   .players-summary {
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.8rem;
+    padding: 0.8rem;
   }
   
   .vs {
     transform: rotate(90deg);
-    font-size: 1.2rem;
-  }
-  
-  .player-symbol {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-  
-  .player-name {
-    font-size: 0.8rem;
-    max-width: 100px;
-  }
-  
-  .result-actions {
-    gap: 0.8rem;
-  }
-  
-  .play-again-button {
-    font-size: 0.9rem;
-    padding: 0.9rem 1.5rem;
-  }
-  
-  .result-leave-game-button {
-    font-size: 0.9rem;
-    padding: 0.9rem 1.5rem;
-  }
-}
-
-/* Landscape orientation on mobile */
-@media (max-width: 767px) and (orientation: landscape) {
-  .game-result-overlay {
-    padding: 0.5rem;
-  }
-  
-  .game-result-modal {
-    max-width: 90%;
-    max-height: 95vh;
-    padding: 1.5rem;
-    overflow-y: auto;
-  }
-  
-  .result-content {
-    gap: 1rem;
-  }
-  
-  .result-icon {
-    font-size: 2.5rem;
-  }
-  
-  .result-title {
-    font-size: 1.8rem;
-  }
-  
-  .game-stats {
-    padding: 1rem;
-  }
-  
-  .game-stats p {
-    font-size: 0.85rem;
-    margin: 0.4rem 0;
-  }
-  
-  .players-summary {
-    flex-direction: row;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .vs {
-    transform: none;
     font-size: 1rem;
   }
   
@@ -652,36 +581,107 @@
   }
   
   .player-name {
-    font-size: 0.75rem;
-    max-width: 80px;
+    font-size: 0.7rem;
+    max-width: 100px;
+  }
+  
+  .result-actions {
+    gap: 0.6rem;
   }
   
   .play-again-button {
     font-size: 0.8rem;
-    padding: 0.8rem 1.2rem;
+    padding: 0.7rem 1rem;
   }
   
   .result-leave-game-button {
     font-size: 0.8rem;
-    padding: 0.8rem 1.2rem;
+    padding: 0.7rem 1rem;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+  .game-result-overlay {
+    padding: 0.3rem;
+  }
+  
+  .game-result-modal {
+    max-width: 90%;
+    max-height: 95vh;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  
+  .result-content {
+    gap: 0.6rem;
+  }
+  
+  .result-icon {
+    font-size: 2rem;
+  }
+  
+  .result-title {
+    font-size: 1.4rem;
+  }
+  
+  .game-stats {
+    padding: 0.8rem;
+  }
+  
+  .game-stats p {
+    font-size: 0.75rem;
+    margin: 0.2rem 0;
+  }
+  
+  .players-summary {
+    flex-direction: row;
+    gap: 0.8rem;
+    padding: 0.8rem;
+  }
+  
+  .vs {
+    transform: none;
+    font-size: 0.9rem;
+  }
+  
+  .player-symbol {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+  
+  .player-name {
+    font-size: 0.65rem;
+    max-width: 80px;
+  }
+  
+  .play-again-button {
+    font-size: 0.7rem;
+    padding: 0.6rem 1rem;
+  }
+  
+  .result-leave-game-button {
+    font-size: 0.7rem;
+    padding: 0.6rem 1rem;
   }
   
   .disconnection-message {
-    margin: 1rem;
-    padding: 1.5rem;
+    margin: 0.5rem;
+    padding: 1rem;
   }
   
   .disconnection-message h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   
   .disconnection-icon {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   
   .back-to-home-button {
-    padding: 0.6rem 1.5rem;
-    font-size: 0.9rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -781,52 +781,52 @@
 /* Extra small screens */
 @media (max-width: 320px) {
   .game-result-modal {
-    padding: 1rem;
-  }
-  
-  .result-content {
-    gap: 1rem;
-  }
-  
-  .result-icon {
-    font-size: 2.5rem;
-  }
-  
-  .result-title {
-    font-size: 1.5rem;
-  }
-  
-  .game-stats {
-    padding: 1rem;
-  }
-  
-  .game-stats p {
-    font-size: 0.8rem;
-    margin: 0.4rem 0;
-  }
-  
-  .players-summary {
     padding: 0.8rem;
   }
   
+  .result-content {
+    gap: 0.6rem;
+  }
+  
+  .result-icon {
+    font-size: 2rem;
+  }
+  
+  .result-title {
+    font-size: 1.3rem;
+  }
+  
+  .game-stats {
+    padding: 0.6rem;
+  }
+  
+  .game-stats p {
+    font-size: 0.7rem;
+    margin: 0.2rem 0;
+  }
+  
+  .players-summary {
+    padding: 0.6rem;
+  }
+  
   .player-symbol {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
   }
   
   .player-name {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     max-width: 80px;
   }
   
   .play-again-button {
-    font-size: 0.8rem;
-    padding: 0.8rem 1.2rem;
+    font-size: 0.7rem;
+    padding: 0.6rem 1rem;
   }
   
   .leave-game-button {
-    font-size: 0.8rem;
-    padding: 0.8rem 1.2rem;
+    font-size: 0.7rem;
+    padding: 0.6rem 1rem;
   }
 } 
