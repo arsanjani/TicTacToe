@@ -30,11 +30,25 @@ public class Game
         return row >= 0 && row < 3 && col >= 0 && col < 3 && Board[row, col] == CellState.Empty;
     }
 
-    public void MakeMove(int row, int col, char symbol)
+    private CellState CharacterIconToCellState(CharacterIcon icon)
+    {
+        return icon switch
+        {
+            CharacterIcon.Cross => CellState.Cross,
+            CharacterIcon.Circle => CellState.Circle,
+            CharacterIcon.Kuromi => CellState.Kuromi,
+            CharacterIcon.MyMelody => CellState.MyMelody,
+            CharacterIcon.Spiderman => CellState.Spiderman,
+            CharacterIcon.Cinnamoroll => CellState.Cinnamoroll,
+            _ => CellState.Cross
+        };
+    }
+
+    public void MakeMove(int row, int col, CharacterIcon characterIcon)
     {
         if (IsValidMove(row, col))
         {
-            Board[row, col] = symbol == 'X' ? CellState.X : CellState.O;
+            Board[row, col] = CharacterIconToCellState(characterIcon);
             MoveCount++;
             
             // Switch turns
@@ -42,14 +56,27 @@ public class Game
         }
     }
 
+    // Keep the old method for backward compatibility
+
+
+    private CellState GetPlayerCellState(Player player)
+    {
+        return CharacterIconToCellState(player.CharacterIcon);
+    }
+
     public GameResult CheckWinner()
     {
+        if (Player1 == null || Player2 == null) return GameResult.None;
+
+        var player1CellState = GetPlayerCellState(Player1);
+        var player2CellState = GetPlayerCellState(Player2);
+
         // Check rows
         for (int row = 0; row < 3; row++)
         {
             if (Board[row, 0] != CellState.Empty && Board[row, 0] == Board[row, 1] && Board[row, 1] == Board[row, 2])
             {
-                return Board[row, 0] == CellState.X ? GameResult.Player1Wins : GameResult.Player2Wins;
+                return Board[row, 0] == player1CellState ? GameResult.Player1Wins : GameResult.Player2Wins;
             }
         }
 
@@ -58,19 +85,19 @@ public class Game
         {
             if (Board[0, col] != CellState.Empty && Board[0, col] == Board[1, col] && Board[1, col] == Board[2, col])
             {
-                return Board[0, col] == CellState.X ? GameResult.Player1Wins : GameResult.Player2Wins;
+                return Board[0, col] == player1CellState ? GameResult.Player1Wins : GameResult.Player2Wins;
             }
         }
 
         // Check diagonals
         if (Board[0, 0] != CellState.Empty && Board[0, 0] == Board[1, 1] && Board[1, 1] == Board[2, 2])
         {
-            return Board[0, 0] == CellState.X ? GameResult.Player1Wins : GameResult.Player2Wins;
+            return Board[0, 0] == player1CellState ? GameResult.Player1Wins : GameResult.Player2Wins;
         }
 
         if (Board[0, 2] != CellState.Empty && Board[0, 2] == Board[1, 1] && Board[1, 1] == Board[2, 0])
         {
-            return Board[0, 2] == CellState.X ? GameResult.Player1Wins : GameResult.Player2Wins;
+            return Board[0, 2] == player1CellState ? GameResult.Player1Wins : GameResult.Player2Wins;
         }
 
         // Check for draw

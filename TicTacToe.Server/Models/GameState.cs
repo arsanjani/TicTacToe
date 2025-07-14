@@ -10,8 +10,12 @@ public enum GameState
 public enum CellState
 {
     Empty,
-    X,
-    O
+    Cross,           // icons8-cross-100.png
+    Circle,          // icons8-circle-100-4.png
+    Kuromi,          // icons8-kuromi-100.png
+    MyMelody,        // icons8-my-melody-100.png
+    Spiderman,       // icons8-spiderman-100-2.png
+    Cinnamoroll      // icons8-cinnamoroll-100.png
 }
 
 public enum GameResult

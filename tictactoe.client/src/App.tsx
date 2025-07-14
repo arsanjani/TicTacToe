@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGameState } from './hooks/useGameState';
-import { GameState } from './types/game';
+import { GameState, CHARACTER_ICONS } from './types/game';
 import GameLobby from './components/Game/GameLobby';
 import WaitingRoom from './components/Game/WaitingRoom';
 import GameBoard from './components/Game/GameBoard';
@@ -105,13 +105,29 @@ function App() {
                     <h1>🎮 <span>Tic Tac Toe</span></h1>
                     <div className="players-info">
                         <div className="player-info">
-                            <span className="player-name">{gameState.currentGame.player1?.name}</span>
-                            <span className="player-symbol x">X</span>
+                            <span className="player-name">{gameState.currentGame?.player1?.name}</span>
+                            <span className="player-symbol">
+                                {gameState.currentGame?.player1?.characterIcon && (
+                                    <img
+                                        src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player1?.characterIcon)?.fileName}`}
+                                        alt={CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player1?.characterIcon)?.displayName}
+                                        className="player-character-icon"
+                                    />
+                                )}
+                            </span>
                         </div>
                         <div className="vs">VS</div>
                         <div className="player-info">
-                            <span className="player-name">{gameState.currentGame.player2?.name}</span>
-                            <span className="player-symbol o">O</span>
+                            <span className="player-name">{gameState.currentGame?.player2?.name}</span>
+                            <span className="player-symbol">
+                                {gameState.currentGame?.player2?.characterIcon && (
+                                    <img
+                                        src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player2?.characterIcon)?.fileName}`}
+                                        alt={CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player2?.characterIcon)?.displayName}
+                                        className="player-character-icon"
+                                    />
+                                )}
+                            </span>
                         </div>
                     </div>
                 </div>

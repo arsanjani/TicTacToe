@@ -7,7 +7,8 @@ import type {
   GameResetEvent, 
   PlayerDisconnectedEvent, 
   GameError, 
-  GameListItem 
+  GameListItem,
+  CharacterIcon
 } from '../types/game';
 
 export class GameService {
@@ -22,7 +23,7 @@ export class GameService {
     this.setupEventHandlers();
   }
 
-  private setupEventHandlers(): void {
+  private setupEventHandlers() {
     this.connection.on('GameCreated', (event: GameCreatedEvent) => {
       this.onGameCreated?.(event);
     });
@@ -51,8 +52,8 @@ export class GameService {
       this.onWaitingGames?.(games);
     });
 
-    this.connection.on('Error', (error: string) => {
-      this.onError?.({ message: error });
+    this.connection.on('Error', (error: GameError) => {
+      this.onError?.(error);
     });
   }
 
@@ -94,26 +95,26 @@ export class GameService {
     }
   }
 
-  async createGame(playerName: string, isPrivate: boolean = false): Promise<void> {
+  async createGame(playerName: string, characterIcon: CharacterIcon, isPrivate: boolean = false): Promise<void> {
     if (!this.isConnected) {
       throw new Error('Not connected to game hub');
     }
 
     try {
-      await this.connection.invoke('CreateGame', playerName, isPrivate);
+      await this.connection.invoke('CreateGame', playerName, characterIcon, isPrivate);
     } catch (error) {
       console.error('Failed to create game:', error);
       throw error;
     }
   }
 
-  async joinGame(gameId: string, playerName: string): Promise<void> {
+  async joinGame(gameId: string, playerName: string, characterIcon: CharacterIcon): Promise<void> {
     if (!this.isConnected) {
       throw new Error('Not connected to game hub');
     }
 
     try {
-      await this.connection.invoke('JoinGame', gameId, playerName);
+      await this.connection.invoke('JoinGame', gameId, playerName, characterIcon);
     } catch (error) {
       console.error('Failed to join game:', error);
       throw error;
@@ -164,5 +165,4 @@ export class GameService {
   }
 }
 
-// Create a singleton instance
 export const gameService = new GameService(); 

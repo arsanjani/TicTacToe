@@ -1,3 +1,78 @@
+/* Character Icon Styles */
+.cell-icon {
+  width: 80%;
+  height: 80%;
+  max-width: 60px;
+  max-height: 60px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.cell.filled .cell-icon {
+  animation: iconAppear 0.4s ease-out;
+}
+
+@keyframes iconAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-15deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.cell-text {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.turn-indicator-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  vertical-align: middle;
+  transition: all 0.3s ease;
+}
+
+.my-turn-indicator .turn-indicator-icon {
+  background: rgba(144, 238, 144, 0.3);
+  box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
+  animation: glowIcon 2s infinite;
+}
+
+@keyframes glowIcon {
+  0% {
+    box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 15px rgba(144, 238, 144, 0.6);
+  }
+  100% {
+    box-shadow: 0 2px 8px rgba(144, 238, 144, 0.3);
+  }
+}
+
+.opponent-turn .turn-indicator-icon {
+  background: rgba(255, 182, 193, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
+}
+
 .game-board {
   position: relative;
   display: flex;
@@ -92,6 +167,11 @@
   z-index: 1;
   position: relative;
   animation: fadeIn 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 @keyframes fadeIn {
@@ -105,14 +185,9 @@
   }
 }
 
-.cell.x .cell-content {
-  color: #e74c3c;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.cell.o .cell-content {
-  color: #3498db;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+/* Character-based cell styling - no longer needed as we use icons */
+.cell.filled .cell-content {
+  /* Icons handle their own styling */
 }
 
 .cell::before {
@@ -154,13 +229,19 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   min-width: 200px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .my-turn-indicator {
   color: #90ee90;
   animation: glow 2s infinite;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 @keyframes glow {
@@ -178,6 +259,109 @@
 .opponent-turn {
   color: #ffb6c1;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive Character Icons */
+@media (min-width: 1440px) {
+  .cell-icon {
+    max-width: 80px;
+    max-height: 80px;
+  }
+  
+  .turn-indicator-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .cell-icon {
+    max-width: 70px;
+    max-height: 70px;
+  }
+  
+  .turn-indicator-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cell-icon {
+    max-width: 55px;
+    max-height: 55px;
+  }
+  
+  .turn-indicator-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cell-icon {
+    max-width: 45px;
+    max-height: 45px;
+  }
+  
+  .turn-indicator-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .current-player {
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 479px) {
+  .cell-icon {
+    max-width: 35px;
+    max-height: 35px;
+  }
+  
+  .turn-indicator-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .current-player {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    min-width: 140px;
+  }
+}
+
+/* Touch devices optimization */
+@media (hover: none) and (pointer: coarse) {
+  .cell.clickable:hover::before {
+    display: none;
+  }
+  
+  .cell.my-turn.clickable:active {
+    background: rgba(144, 238, 144, 0.8);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .cell-icon,
+  .turn-indicator-icon {
+    animation: none;
+  }
+  
+  .cell.filled .cell-icon {
+    animation: none;
+  }
+  
+  .my-turn-indicator .turn-indicator-icon {
+    animation: none;
+  }
 }
 
 /* Large Desktop (1440px+) */
@@ -406,6 +590,11 @@
     border-radius: 4px;
   }
   
+  .cell-icon {
+    max-width: 30px;
+    max-height: 30px;
+  }
+  
   .game-info {
     flex-direction: column;
     justify-content: center;
@@ -418,6 +607,11 @@
     font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
     min-width: 100px;
+  }
+  
+  .turn-indicator-icon {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -441,10 +635,20 @@
     border-radius: 4px;
   }
   
+  .cell-icon {
+    max-width: 25px;
+    max-height: 25px;
+  }
+  
   .current-player {
     font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
     min-width: 120px;
+  }
+  
+  .turn-indicator-icon {
+    width: 16px;
+    height: 16px;
   }
 }
 

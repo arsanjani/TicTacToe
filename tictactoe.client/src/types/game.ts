@@ -1,7 +1,18 @@
+export const CharacterIcon = {
+  Cross: 'Cross',
+  Circle: 'Circle',
+  Kuromi: 'Kuromi',
+  MyMelody: 'MyMelody',
+  Spiderman: 'Spiderman',
+  Cinnamoroll: 'Cinnamoroll'
+} as const;
+
+export type CharacterIcon = typeof CharacterIcon[keyof typeof CharacterIcon];
+
 export interface Player {
   id: string;
   name: string;
-  symbol: 'X' | 'O';
+  characterIcon: CharacterIcon;
   isReady: boolean;
   isActive: boolean;
   joinedAt: Date;
@@ -42,6 +53,7 @@ export type GameResult = typeof GameResult[keyof typeof GameResult];
 export interface GameListItem {
   gameId: string;
   player1Name: string;
+  player1CharacterIcon: CharacterIcon;
   createdAt: Date;
   isPrivate: boolean;
 }
@@ -50,7 +62,7 @@ export interface GameCreatedEvent {
   gameId: string;
   playerId: string;
   playerName: string;
-  symbol: 'X' | 'O';
+  characterIcon: CharacterIcon;
   state: string;
   isPrivate: boolean;
 }
@@ -95,4 +107,19 @@ export interface PlayerDisconnectedEvent {
 
 export interface GameError {
   message: string;
-} 
+}
+
+export interface CharacterIconInfo {
+  icon: CharacterIcon;
+  displayName: string;
+  fileName: string;
+}
+
+export const CHARACTER_ICONS: CharacterIconInfo[] = [
+  { icon: CharacterIcon.Cross, displayName: 'Cross', fileName: 'icons8-cross-100.png' },
+  { icon: CharacterIcon.Circle, displayName: 'Circle', fileName: 'icons8-circle-100-4.png' },
+  { icon: CharacterIcon.Kuromi, displayName: 'Kuromi', fileName: 'icons8-kuromi-100.png' },
+  { icon: CharacterIcon.MyMelody, displayName: 'My Melody', fileName: 'icons8-my-melody-100.png' },
+  { icon: CharacterIcon.Spiderman, displayName: 'Spider-Man', fileName: 'icons8-spiderman-100-2.png' },
+  { icon: CharacterIcon.Cinnamoroll, displayName: 'Cinnamoroll', fileName: 'icons8-cinnamoroll-100.png' }
+]; 

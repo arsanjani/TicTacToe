@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { gameService } from '../services/gameService';
-import { GameState, GameResult } from '../types/game';
+import { GameState, GameResult, CharacterIcon } from '../types/game';
 import type { 
   Player, 
   Game, 
@@ -26,8 +26,8 @@ export interface GameStateHook {
   // Game actions
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
-  createGame: (playerName: string, isPrivate?: boolean) => Promise<void>;
-  joinGame: (gameId: string, playerName: string) => Promise<void>;
+  createGame: (playerName: string, characterIcon: CharacterIcon, isPrivate?: boolean) => Promise<void>;
+  joinGame: (gameId: string, playerName: string, characterIcon: CharacterIcon) => Promise<void>;
   makeMove: (row: number, col: number) => Promise<void>;
   getWaitingGames: () => Promise<void>;
   resetGame: () => Promise<void>;
@@ -39,7 +39,7 @@ export interface GameStateHook {
   isGameInProgress: boolean;
   isGameFinished: boolean;
   isWaitingForPlayer: boolean;
-  mySymbol: 'X' | 'O' | null;
+  myCharacterIcon: CharacterIcon | null;
   opponent: Player | null;
   me: Player | null;
 }
@@ -59,7 +59,7 @@ export const useGameState = (): GameStateHook => {
       player1: { 
         id: event.playerId, 
         name: event.playerName, 
-        symbol: event.symbol,
+        characterIcon: event.characterIcon,
         isReady: true,
         isActive: true,
         joinedAt: new Date()
@@ -211,18 +211,18 @@ export const useGameState = (): GameStateHook => {
   }, []);
 
   // Game actions
-  const createGame = useCallback(async (playerName: string, isPrivate: boolean = false) => {
+  const createGame = useCallback(async (playerName: string, characterIcon: CharacterIcon, isPrivate: boolean = false) => {
     try {
-      await gameService.createGame(playerName, isPrivate);
+      await gameService.createGame(playerName, characterIcon, isPrivate);
       setError(null);
     } catch (error) {
       setError(`Failed to create game: ${error}`);
     }
   }, []);
 
-  const joinGame = useCallback(async (gameId: string, playerName: string) => {
+  const joinGame = useCallback(async (gameId: string, playerName: string, characterIcon: CharacterIcon) => {
     try {
-      await gameService.joinGame(gameId, playerName);
+      await gameService.joinGame(gameId, playerName, characterIcon);
       setError(null);
     } catch (error) {
       setError(`Failed to join game: ${error}`);
@@ -264,46 +264,36 @@ export const useGameState = (): GameStateHook => {
     setError(null);
   }, []);
 
-  // Computed properties
+  // Game info helpers
   const isMyTurn = currentGame?.currentPlayer?.id === currentPlayerId;
-  const canMakeMove = (row: number, col: number): boolean => {
-    return Boolean(
-      currentGame &&
-      currentGame.state === GameState.InProgress &&
-      isMyTurn &&
-      currentGame.board[row][col] === ''
-    );
-  };
-  
+  const canMakeMove = useCallback((row: number, col: number) => {
+    return currentGame?.state === GameState.InProgress && 
+           isMyTurn && 
+           currentGame?.board[row][col] === '';
+  }, [currentGame, isMyTurn]);
+
   const isGameInProgress = currentGame?.state === GameState.InProgress;
   const isGameFinished = currentGame?.state === GameState.Finished;
   const isWaitingForPlayer = currentGame?.state === GameState.WaitingForPlayers;
-  
-  const mySymbol = currentGame?.player1?.id === currentPlayerId ? 
-    currentGame.player1.symbol : 
-    currentGame?.player2?.id === currentPlayerId ? 
-    currentGame.player2.symbol : 
-    null;
-    
-  const opponent = currentGame?.player1?.id === currentPlayerId ? 
-    currentGame.player2 : 
-    currentGame?.player2?.id === currentPlayerId ? 
-    currentGame.player1 : 
-    null;
-    
-  const me = currentGame?.player1?.id === currentPlayerId ? 
-    currentGame.player1 : 
-    currentGame?.player2?.id === currentPlayerId ? 
-    currentGame.player2 : 
-    null;
+
+  const me = currentGame?.player1?.id === currentPlayerId ? currentGame?.player1 ?? null : 
+             currentGame?.player2?.id === currentPlayerId ? currentGame?.player2 ?? null : null;
+
+  const opponent = currentGame?.player1?.id !== currentPlayerId ? currentGame?.player1 ?? null : 
+                   currentGame?.player2?.id !== currentPlayerId ? currentGame?.player2 ?? null : null;
+
+  const myCharacterIcon = me?.characterIcon || null;
 
   return {
+    // Game state
     currentGame,
     waitingGames,
     connectionState,
     error,
     isConnected,
     currentPlayerId,
+    
+    // Game actions
     connect,
     disconnect,
     createGame,
@@ -312,12 +302,14 @@ export const useGameState = (): GameStateHook => {
     getWaitingGames,
     resetGame,
     clearError,
+    
+    // Game info
     isMyTurn,
     canMakeMove,
     isGameInProgress,
     isGameFinished,
     isWaitingForPlayer,
-    mySymbol,
+    myCharacterIcon,
     opponent,
     me
   };

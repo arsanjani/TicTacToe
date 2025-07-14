@@ -26,6 +26,11 @@ export default defineConfig({
                 secure: false,
                 ws: true, // Enable WebSocket proxying for SignalR
                 changeOrigin: true
+            },
+            '^/game_icons': {
+                target,
+                secure: false,
+                changeOrigin: true
             }
         },
         port: 55577,

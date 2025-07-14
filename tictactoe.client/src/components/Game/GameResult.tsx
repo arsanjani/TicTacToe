@@ -1,5 +1,6 @@
 import { GameResult as GameResultType } from '../../types/game';
 import type { GameStateHook } from '../../hooks/useGameState';
+import { CHARACTER_ICONS } from '../../types/game';
 import '../../theme/components/game/GameResult.css';
 
 interface GameResultProps {
@@ -75,12 +76,28 @@ const GameResult = ({ gameState }: GameResultProps) => {
           
           <div className="players-summary">
             <div className="player-card">
-              <div className="player-symbol x">X</div>
+              <div className="player-symbol">
+                {currentGame.player1?.characterIcon && (
+                  <img
+                    src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === currentGame.player1?.characterIcon)?.fileName}`}
+                    alt={CHARACTER_ICONS.find(c => c.icon === currentGame.player1?.characterIcon)?.displayName}
+                    className="result-player-icon"
+                  />
+                )}
+              </div>
               <div className="player-name">{currentGame.player1?.name}</div>
             </div>
             <div className="vs">VS</div>
             <div className="player-card">
-              <div className="player-symbol o">O</div>
+              <div className="player-symbol">
+                {currentGame.player2?.characterIcon && (
+                  <img
+                    src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === currentGame.player2?.characterIcon)?.fileName}`}
+                    alt={CHARACTER_ICONS.find(c => c.icon === currentGame.player2?.characterIcon)?.displayName}
+                    className="result-player-icon"
+                  />
+                )}
+              </div>
               <div className="player-name">{currentGame.player2?.name}</div>
             </div>
           </div>

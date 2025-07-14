@@ -15,12 +15,64 @@ public class GameHub : Hub
         _logger = logger;
     }
 
-    public async Task CreateGame(string playerName, bool isPrivate = false)
+    private string CellStateToCharacterIcon(CellState cellState, Game game)
+    {
+        if (cellState == CellState.Empty)
+        {
+            return "";
+        }
+        
+        // Find the player who has this cell state and return their character icon
+        var player1CellState = game.Player1?.CharacterIcon switch
+        {
+            CharacterIcon.Cross => CellState.Cross,
+            CharacterIcon.Circle => CellState.Circle,
+            CharacterIcon.Kuromi => CellState.Kuromi,
+            CharacterIcon.MyMelody => CellState.MyMelody,
+            CharacterIcon.Spiderman => CellState.Spiderman,
+            CharacterIcon.Cinnamoroll => CellState.Cinnamoroll,
+            _ => CellState.Cross
+        };
+        
+        var player2CellState = game.Player2?.CharacterIcon switch
+        {
+            CharacterIcon.Cross => CellState.Cross,
+            CharacterIcon.Circle => CellState.Circle,
+            CharacterIcon.Kuromi => CellState.Kuromi,
+            CharacterIcon.MyMelody => CellState.MyMelody,
+            CharacterIcon.Spiderman => CellState.Spiderman,
+            CharacterIcon.Cinnamoroll => CellState.Cinnamoroll,
+            _ => CellState.Circle
+        };
+        
+        if (cellState == player1CellState)
+        {
+            return game.Player1?.CharacterIcon.ToString() ?? "";
+        }
+        else if (cellState == player2CellState)
+        {
+            return game.Player2?.CharacterIcon.ToString() ?? "";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    public async Task CreateGame(string playerName, string characterIcon, bool isPrivate = false)
     {
         try
         {
             var playerId = Context.ConnectionId;
-            var game = await _gameService.CreateGameAsync(playerId, playerName, isPrivate);
+            
+            // Parse character icon
+            if (!Enum.TryParse<CharacterIcon>(characterIcon, true, out var parsedIcon))
+            {
+                await Clients.Caller.SendAsync("Error", "Invalid character icon");
+                return;
+            }
+
+            var game = await _gameService.CreateGameAsync(playerId, playerName, parsedIcon, isPrivate);
             
             // Join the game room
             await Groups.AddToGroupAsync(Context.ConnectionId, game.Id);
@@ -31,12 +83,12 @@ public class GameHub : Hub
                 GameId = game.Id,
                 PlayerId = playerId,
                 PlayerName = playerName,
-                Symbol = game.Player1?.Symbol,
+                CharacterIcon = game.Player1?.CharacterIcon.ToString(),
                 State = game.State.ToString(),
                 IsPrivate = game.IsPrivate
             });
 
-            _logger.LogInformation($"Game {game.Id} created by player {playerName} (Private: {isPrivate})");
+            _logger.LogInformation($"Game {game.Id} created by player {playerName} with character {parsedIcon} (Private: {isPrivate})");
         }
         catch (Exception ex)
         {
@@ -45,16 +97,24 @@ public class GameHub : Hub
         }
     }
 
-    public async Task JoinGame(string gameId, string playerName)
+    public async Task JoinGame(string gameId, string playerName, string characterIcon)
     {
         try
         {
             var playerId = Context.ConnectionId;
-            var game = await _gameService.JoinGameAsync(gameId, playerId, playerName);
+            
+            // Parse character icon
+            if (!Enum.TryParse<CharacterIcon>(characterIcon, true, out var parsedIcon))
+            {
+                await Clients.Caller.SendAsync("Error", "Invalid character icon");
+                return;
+            }
+
+            var game = await _gameService.JoinGameAsync(gameId, playerId, playerName, parsedIcon);
             
             if (game == null)
             {
-                await Clients.Caller.SendAsync("Error", "Game not found or already full");
+                await Clients.Caller.SendAsync("Error", "Game not found, already full, or character already taken");
                 return;
             }
 
@@ -65,13 +125,25 @@ public class GameHub : Hub
             await Clients.Group(gameId).SendAsync("GameStarted", new
             {
                 GameId = gameId,
-                Player1 = new { Id = game.Player1?.Id, Name = game.Player1?.Name, Symbol = game.Player1?.Symbol },
-                Player2 = new { Id = game.Player2?.Id, Name = game.Player2?.Name, Symbol = game.Player2?.Symbol },
-                CurrentPlayer = new { Id = game.CurrentPlayer?.Id, Name = game.CurrentPlayer?.Name, Symbol = game.CurrentPlayer?.Symbol },
+                Player1 = new { 
+                    Id = game.Player1?.Id, 
+                    Name = game.Player1?.Name, 
+                    CharacterIcon = game.Player1?.CharacterIcon.ToString()
+                },
+                Player2 = new { 
+                    Id = game.Player2?.Id, 
+                    Name = game.Player2?.Name, 
+                    CharacterIcon = game.Player2?.CharacterIcon.ToString()
+                },
+                CurrentPlayer = new { 
+                    Id = game.CurrentPlayer?.Id, 
+                    Name = game.CurrentPlayer?.Name, 
+                    CharacterIcon = game.CurrentPlayer?.CharacterIcon.ToString()
+                },
                 State = game.State.ToString()
             });
 
-            _logger.LogInformation($"Player {playerName} joined game {gameId}");
+            _logger.LogInformation($"Player {playerName} joined game {gameId} with character {parsedIcon}");
         }
         catch (Exception ex)
         {
@@ -100,6 +172,17 @@ public class GameHub : Hub
                 return;
             }
 
+            // Create board representation for client
+            var boardForClient = new string[3][];
+            for (int i = 0; i < 3; i++)
+            {
+                boardForClient[i] = new string[3];
+                for (int j = 0; j < 3; j++)
+                {
+                    boardForClient[i][j] = CellStateToCharacterIcon(game.Board[i, j], game);
+                }
+            }
+
             // Notify all players about the move
             await Clients.Group(gameId).SendAsync("MoveMade", new
             {
@@ -107,8 +190,12 @@ public class GameHub : Hub
                 Row = row,
                 Col = col,
                 PlayerId = playerId,
-                Board = ConvertBoardToArray(game.Board),
-                CurrentPlayer = game.CurrentPlayer != null ? new { Id = game.CurrentPlayer.Id, Name = game.CurrentPlayer.Name, Symbol = game.CurrentPlayer.Symbol } : null,
+                Board = boardForClient,
+                CurrentPlayer = game.CurrentPlayer != null ? new { 
+                    Id = game.CurrentPlayer.Id, 
+                    Name = game.CurrentPlayer.Name, 
+                    CharacterIcon = game.CurrentPlayer.CharacterIcon.ToString()
+                } : null,
                 MoveCount = game.MoveCount
             });
 
@@ -119,13 +206,11 @@ public class GameHub : Hub
                 {
                     GameId = gameId,
                     Result = game.Result.ToString(),
-                    Winner = game.Result == GameResult.Player1Wins ? game.Player1?.Name :
-                             game.Result == GameResult.Player2Wins ? game.Player2?.Name : null,
+                    Winner = game.Result == GameResult.Player1Wins ? game.Player1?.Name : 
+                            game.Result == GameResult.Player2Wins ? game.Player2?.Name : null,
                     EndedAt = game.EndedAt
                 });
             }
-
-            _logger.LogInformation($"Move made in game {gameId} at ({row}, {col}) by player {playerId}");
         }
         catch (Exception ex)
         {
@@ -139,15 +224,16 @@ public class GameHub : Hub
         try
         {
             var games = await _gameService.GetWaitingGamesAsync();
-            var gamesList = games.Select(g => new
+            var gamesForClient = games.Select(g => new
             {
                 GameId = g.Id,
                 Player1Name = g.Player1?.Name,
+                Player1CharacterIcon = g.Player1?.CharacterIcon.ToString(),
                 CreatedAt = g.CreatedAt,
                 IsPrivate = g.IsPrivate
-            }).ToList();
+            });
 
-            await Clients.Caller.SendAsync("WaitingGames", gamesList);
+            await Clients.Caller.SendAsync("WaitingGames", gamesForClient);
         }
         catch (Exception ex)
         {
@@ -161,10 +247,9 @@ public class GameHub : Hub
         try
         {
             var success = await _gameService.ResetGameAsync(gameId);
-            
             if (!success)
             {
-                await Clients.Caller.SendAsync("Error", "Cannot reset game");
+                await Clients.Caller.SendAsync("Error", "Failed to reset game");
                 return;
             }
 
@@ -175,16 +260,28 @@ public class GameHub : Hub
                 return;
             }
 
-            // Notify all players about the game reset
+            // Create board representation for client
+            var boardForClient = new string[3][];
+            for (int i = 0; i < 3; i++)
+            {
+                boardForClient[i] = new string[3];
+                for (int j = 0; j < 3; j++)
+                {
+                    boardForClient[i][j] = CellStateToCharacterIcon(game.Board[i, j], game);
+                }
+            }
+
             await Clients.Group(gameId).SendAsync("GameReset", new
             {
                 GameId = gameId,
-                Board = ConvertBoardToArray(game.Board),
-                CurrentPlayer = new { Id = game.CurrentPlayer?.Id, Name = game.CurrentPlayer?.Name, Symbol = game.CurrentPlayer?.Symbol },
+                Board = boardForClient,
+                CurrentPlayer = new { 
+                    Id = game.CurrentPlayer?.Id, 
+                    Name = game.CurrentPlayer?.Name, 
+                    CharacterIcon = game.CurrentPlayer?.CharacterIcon.ToString()
+                },
                 State = game.State.ToString()
             });
-
-            _logger.LogInformation($"Game {gameId} reset");
         }
         catch (Exception ex)
         {
@@ -202,49 +299,26 @@ public class GameHub : Hub
             
             if (game != null)
             {
-                // Get the leaving player's name
-                var leavingPlayer = game.Player1?.Id == playerId ? game.Player1 : game.Player2;
-                var leavingPlayerName = leavingPlayer?.Name ?? "Unknown Player";
-
-                // Notify other players about disconnection
-                await Clients.OthersInGroup(game.Id).SendAsync("PlayerDisconnected", new
+                var disconnectedPlayer = game.Player1?.Id == playerId ? game.Player1 : game.Player2;
+                
+                if (disconnectedPlayer != null)
                 {
-                    GameId = game.Id,
-                    PlayerId = playerId,
-                    PlayerName = leavingPlayerName
-                });
-
-                // Remove player from game
+                    await Clients.Group(game.Id).SendAsync("PlayerDisconnected", new
+                    {
+                        GameId = game.Id,
+                        PlayerId = playerId,
+                        PlayerName = disconnectedPlayer.Name
+                    });
+                }
+                
                 await _gameService.RemovePlayerAsync(playerId);
             }
-
-            _logger.LogInformation($"Player {playerId} disconnected");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error handling disconnection");
+            _logger.LogError(ex, "Error handling disconnect");
         }
-
+        
         await base.OnDisconnectedAsync(exception);
-    }
-
-    private static string[][] ConvertBoardToArray(CellState[,] board)
-    {
-        var result = new string[3][];
-        for (int i = 0; i < 3; i++)
-        {
-            result[i] = new string[3];
-            for (int j = 0; j < 3; j++)
-            {
-                result[i][j] = board[i, j] switch
-                {
-                    CellState.Empty => "",
-                    CellState.X => "X",
-                    CellState.O => "O",
-                    _ => ""
-                };
-            }
-        }
-        return result;
     }
 } 

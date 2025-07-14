@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { GameStateHook } from '../../hooks/useGameState';
+import { CHARACTER_ICONS, CharacterIcon } from '../../types/game';
 import '../../theme/components/game/WaitingRoom.css';
 
 interface WaitingRoomProps {
@@ -10,6 +11,7 @@ interface WaitingRoomProps {
 const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
   const { currentGame, waitingGames, getWaitingGames, joinGame, me } = gameState;
   const [playerName, setPlayerName] = useState('');
+  const [selectedCharacter, setSelectedCharacter] = useState<CharacterIcon>(CharacterIcon.Circle);
   const [isJoining, setIsJoining] = useState(false);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
     
     setIsJoining(true);
     try {
-      await joinGame(gameId, playerName.trim());
+      await joinGame(gameId, playerName.trim(), selectedCharacter);
     } finally {
       setIsJoining(false);
     }
@@ -54,122 +56,168 @@ const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
     ? waitingGames.filter(game => game.gameId === joinGameId)
     : waitingGames;
 
-  if (currentGame?.state === 'WaitingForPlayers') {
+  // Show waiting room for game creator
+  if (currentGame && currentGame.state === 'WaitingForPlayers') {
     return (
       <div className="waiting-room">
         <div className="waiting-container">
           <div className="waiting-header">
-            <h2>Waiting for Player...</h2>
-            <div className="waiting-spinner">
-              <div className="waiting-spinner-circle"></div>
-            </div>
+            <h2>🎮 Game Created!</h2>
+            <p className="waiting-subtitle">Share the link below to invite a friend</p>
           </div>
-          
+
           <div className="waiting-game-info">
-            <p>You are <strong>{me?.name}</strong> playing as <strong>{me?.symbol}</strong></p>
-            <p>Game ID: <span className="waiting-game-id">{currentGame.id}</span></p>
-          </div>
+            <div className="waiting-player-info">
+              <div className="waiting-player-card">
+                <div className="waiting-player-avatar">
+                  <img
+                    src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === me?.characterIcon)?.fileName}`}
+                    alt={CHARACTER_ICONS.find(c => c.icon === me?.characterIcon)?.displayName}
+                    className="waiting-player-icon"
+                  />
+                </div>
+                <div className="waiting-player-details">
+                  <h3>{me?.name || 'You'}</h3>
+                  <p>Playing as {CHARACTER_ICONS.find(c => c.icon === me?.characterIcon)?.displayName}</p>
+                </div>
+              </div>
+            </div>
 
-          <div className="waiting-share-section">
-            <h3>Share this game with a friend:</h3>
-            <div className="waiting-share-link">
-              <input
-                type="text"
-                value={getShareableLink()}
-                readOnly
-                className="waiting-share-input"
-              />
-              <button onClick={copyToClipboard} className="waiting-copy-button">
-                Copy Link
-              </button>
+            <div className="waiting-share-section">
+              <div className="waiting-share-link">
+                <input
+                  type="text"
+                  value={getShareableLink()}
+                  readOnly
+                  className="waiting-share-input"
+                />
+                <button onClick={copyToClipboard} className="waiting-copy-button">
+                  📋 Copy
+                </button>
+              </div>
+              <p className="waiting-share-description">
+                Share this link with your friend so they can join your game!
+              </p>
             </div>
           </div>
 
-          <div className="waiting-message">
-            <p>Share the link above or wait for someone to join your game!</p>
+          <div className="waiting-status">
+            <div className="waiting-spinner"></div>
+            <p>Waiting for opponent to join...</p>
           </div>
         </div>
       </div>
     );
   }
 
+  // Show join game interface
   return (
     <div className="waiting-room">
       <div className="waiting-container">
-        <div className="waiting-join-section">
-          <h2>{joinGameId ? 'Join This Game' : 'Join a Game'}</h2>
-          <div className="waiting-name-input">
-            <input
-              type="text"
-              placeholder="Enter your name"
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              className="waiting-player-name-input"
-              maxLength={20}
-            />
-          </div>
+        <div className="waiting-header">
+          <h2>🎯 Join a Game</h2>
+          <p className="waiting-subtitle">Choose a game to join and start playing!</p>
         </div>
 
-        <div className="waiting-games-list">
-          <h3>{joinGameId ? 'Game Details' : 'Available Games'}</h3>
-          {filteredWaitingGames.length === 0 ? (
-            <div className="waiting-no-games">
-              {joinGameId ? (
-                <>
-                  <p>This game is no longer available.</p>
-                  <p>It may have already started or been cancelled.</p>
-                </>
-              ) : (
-                <>
-                  <p>No games available right now.</p>
-                  <p>Create a new game to start playing!</p>
-                </>
-              )}
+        <div className="waiting-join-section">
+          <div className="waiting-player-setup">
+            <div className="waiting-input-group">
+              <label htmlFor="joinPlayerName">Your Name</label>
+              <input
+                id="joinPlayerName"
+                type="text"
+                placeholder="Enter your name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                className="waiting-player-name-input"
+                maxLength={20}
+              />
             </div>
-          ) : (
-            <div className="waiting-games-grid">
-              {filteredWaitingGames.map((game) => (
-                <div key={game.gameId} className="waiting-game-card">
-                  <div className="waiting-game-card-header">
-                    <h4>{game.player1Name}</h4>
-                    <span className="waiting-indicator">Waiting...</span>
+
+            <div className="waiting-input-group">
+              <label>Choose Your Character</label>
+              <div className="waiting-character-selection">
+                {CHARACTER_ICONS.map((characterInfo) => (
+                  <div
+                    key={characterInfo.icon}
+                    className={`waiting-character-option ${selectedCharacter === characterInfo.icon ? 'selected' : ''}`}
+                    onClick={() => setSelectedCharacter(characterInfo.icon)}
+                  >
+                    <img
+                      src={`/game_icons/${characterInfo.fileName}`}
+                      alt={characterInfo.displayName}
+                      className="waiting-character-icon"
+                    />
+                    <span className="waiting-character-name">{characterInfo.displayName}</span>
                   </div>
-                  <div className="waiting-game-card-info">
-                    <p>Created: {new Date(game.createdAt).toLocaleTimeString()}</p>
-                    {joinGameId && (
-                      <p>Game ID: <span className="waiting-game-id">{game.gameId}</span></p>
-                    )}
-                    {game.isPrivate && (
-                      <p className="waiting-private-indicator">🔒 Private Game</p>
-                    )}
-                  </div>
-                  {game.isPrivate && !joinGameId ? (
-                    <div className="waiting-private-game-indicator">
-                      <div className="waiting-lock-icon">🔒</div>
-                      <p>Private game - join via share link only</p>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="waiting-games-section">
+            <h3>Available Games</h3>
+            {filteredWaitingGames.length === 0 ? (
+              <div className="waiting-no-games">
+                <p>No games available at the moment.</p>
+                <p>Create a game to start playing!</p>
+              </div>
+            ) : (
+              <div className="waiting-games-grid">
+                {filteredWaitingGames.map((game) => (
+                  <div key={game.gameId} className="waiting-game-card">
+                    <div className="waiting-game-card-header">
+                      <div className="waiting-game-creator">
+                        <img
+                          src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === game.player1CharacterIcon)?.fileName}`}
+                          alt={CHARACTER_ICONS.find(c => c.icon === game.player1CharacterIcon)?.displayName}
+                          className="waiting-game-creator-icon"
+                        />
+                        <div>
+                          <h4>{game.player1Name}</h4>
+                          <p>Playing as {CHARACTER_ICONS.find(c => c.icon === game.player1CharacterIcon)?.displayName}</p>
+                        </div>
+                      </div>
+                      <span className="waiting-indicator">Waiting...</span>
                     </div>
-                  ) : (
-                    <button
-                      onClick={() => handleJoinGame(game.gameId)}
-                      disabled={!playerName.trim() || isJoining}
-                      className="waiting-join-button"
-                    >
-                      {isJoining ? 'Joining...' : 'Join Game'}
-                    </button>
-                  )}
-                </div>
-              ))}
+                    <div className="waiting-game-card-info">
+                      <p>Created: {new Date(game.createdAt).toLocaleTimeString()}</p>
+                      {joinGameId && (
+                        <p>Game ID: <span className="waiting-game-id">{game.gameId}</span></p>
+                      )}
+                      {game.isPrivate && (
+                        <p className="waiting-private-indicator">🔒 Private Game</p>
+                      )}
+                    </div>
+                    {game.isPrivate && !joinGameId ? (
+                      <div className="waiting-private-game-indicator">
+                        <div className="waiting-lock-icon">🔒</div>
+                        <p>Private game - join via share link only</p>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleJoinGame(game.gameId)}
+                        disabled={!playerName.trim() || isJoining || selectedCharacter === game.player1CharacterIcon}
+                        className="waiting-join-button"
+                      >
+                        {selectedCharacter === game.player1CharacterIcon ? 'Character Taken' : 
+                         isJoining ? 'Joining...' : 'Join Game'}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {!joinGameId && (
+            <div className="waiting-refresh-section">
+              <button onClick={getWaitingGames} className="waiting-refresh-button">
+                Refresh Games
+              </button>
             </div>
           )}
         </div>
-
-        {!joinGameId && (
-          <div className="waiting-refresh-section">
-            <button onClick={getWaitingGames} className="waiting-refresh-button">
-              Refresh Games
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

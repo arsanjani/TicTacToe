@@ -5,8 +5,8 @@ namespace TicTacToe.Server.Services;
 
 public interface IGameService
 {
-    Task<Game> CreateGameAsync(string playerId, string playerName, bool isPrivate = false);
-    Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName);
+    Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false);
+    Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName, CharacterIcon characterIcon);
     Task<Game?> GetGameAsync(string gameId);
     Task<Game?> GetGameByPlayerAsync(string playerId);
     Task<bool> MakeMoveAsync(string gameId, string playerId, int row, int col);
@@ -20,7 +20,7 @@ public class GameService : IGameService
     private readonly ConcurrentDictionary<string, Game> _games = new();
     private readonly ConcurrentDictionary<string, string> _playerToGame = new();
 
-    public async Task<Game> CreateGameAsync(string playerId, string playerName, bool isPrivate = false)
+    public async Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false)
     {
         var game = new Game
         {
@@ -30,7 +30,7 @@ public class GameService : IGameService
                 Id = playerId,
                 ConnectionId = playerId,
                 Name = playerName,
-                Symbol = 'X',
+                CharacterIcon = characterIcon,
                 IsReady = true
             },
             State = GameState.WaitingForPlayers,
@@ -43,7 +43,7 @@ public class GameService : IGameService
         return await Task.FromResult(game);
     }
 
-    public async Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName)
+    public async Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName, CharacterIcon characterIcon)
     {
         if (!_games.TryGetValue(gameId, out var game))
             return null;
@@ -54,17 +54,21 @@ public class GameService : IGameService
         if (game.State != GameState.WaitingForPlayers)
             return null;
 
+        // Check if the character icon is already taken by player1
+        if (game.Player1 != null && game.Player1.CharacterIcon == characterIcon)
+            return null;
+
         game.Player2 = new Player
         {
             Id = playerId,
             ConnectionId = playerId,
             Name = playerName,
-            Symbol = 'O',
+            CharacterIcon = characterIcon,
             IsReady = true
         };
 
         game.State = GameState.InProgress;
-        game.CurrentPlayer = game.Player1; // X goes first
+        game.CurrentPlayer = game.Player1; // Player1 goes first
         game.StartedAt = DateTime.UtcNow;
 
         _playerToGame[playerId] = gameId;
@@ -104,7 +108,8 @@ public class GameService : IGameService
         if (player == null)
             return false;
 
-        game.MakeMove(row, col, player.Symbol);
+        // Use the new CharacterIcon-based MakeMove method
+        game.MakeMove(row, col, player.CharacterIcon);
 
         // Check for winner
         var result = game.CheckWinner();
@@ -170,7 +175,7 @@ public class GameService : IGameService
         game.Board = new CellState[3, 3];
         game.State = GameState.InProgress;
         game.Result = GameResult.None;
-        game.CurrentPlayer = game.Player1; // X goes first
+        game.CurrentPlayer = game.Player1; // Player1 goes first
         game.MoveCount = 0;
         game.StartedAt = DateTime.UtcNow;
         game.EndedAt = null;
