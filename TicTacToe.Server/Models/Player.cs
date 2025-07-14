@@ -7,7 +7,11 @@ public enum CharacterIcon
     Kuromi,          // icons8-kuromi-100.png
     MyMelody,        // icons8-my-melody-100.png
     Spiderman,       // icons8-spiderman-100-2.png
-    Cinnamoroll      // icons8-cinnamoroll-100.png
+    Cinnamoroll,     // icons8-cinnamoroll-100.png
+    BadtzMaru,       // icons8-badtz-maru-100.png
+    HelloKitty,      // icons8-hello-kitty-100.png
+    Keroppi,         // icons8-keroppi-100.png
+    Pochacco         // icons8-pochacco-100.png
 }
 
 public class Player

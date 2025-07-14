@@ -72,7 +72,7 @@ const GameBoard = ({ gameState }: GameBoardProps) => {
       <div className="board-container">
         <div className="board">
           {currentGame.board.map((row, rowIndex) =>
-            row.map((cell, colIndex) => (
+            row.map((_, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
                 className={getCellClass(rowIndex, colIndex)}

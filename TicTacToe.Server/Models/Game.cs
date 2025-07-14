@@ -40,6 +40,10 @@ public class Game
             CharacterIcon.MyMelody => CellState.MyMelody,
             CharacterIcon.Spiderman => CellState.Spiderman,
             CharacterIcon.Cinnamoroll => CellState.Cinnamoroll,
+            CharacterIcon.BadtzMaru => CellState.BadtzMaru,
+            CharacterIcon.HelloKitty => CellState.HelloKitty,
+            CharacterIcon.Keroppi => CellState.Keroppi,
+            CharacterIcon.Pochacco => CellState.Pochacco,
             _ => CellState.Cross
         };
     }

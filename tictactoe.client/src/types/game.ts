@@ -4,7 +4,11 @@ export const CharacterIcon = {
   Kuromi: 'Kuromi',
   MyMelody: 'MyMelody',
   Spiderman: 'Spiderman',
-  Cinnamoroll: 'Cinnamoroll'
+  Cinnamoroll: 'Cinnamoroll',
+  BadtzMaru: 'BadtzMaru',
+  HelloKitty: 'HelloKitty',
+  Keroppi: 'Keroppi',
+  Pochacco: 'Pochacco'
 } as const;
 
 export type CharacterIcon = typeof CharacterIcon[keyof typeof CharacterIcon];
@@ -121,5 +125,9 @@ export const CHARACTER_ICONS: CharacterIconInfo[] = [
   { icon: CharacterIcon.Kuromi, displayName: 'Kuromi', fileName: 'icons8-kuromi-100.png' },
   { icon: CharacterIcon.MyMelody, displayName: 'My Melody', fileName: 'icons8-my-melody-100.png' },
   { icon: CharacterIcon.Spiderman, displayName: 'Spider-Man', fileName: 'icons8-spiderman-100-2.png' },
-  { icon: CharacterIcon.Cinnamoroll, displayName: 'Cinnamoroll', fileName: 'icons8-cinnamoroll-100.png' }
+  { icon: CharacterIcon.Cinnamoroll, displayName: 'Cinnamoroll', fileName: 'icons8-cinnamoroll-100.png' },
+  { icon: CharacterIcon.BadtzMaru, displayName: 'Badtz-Maru', fileName: 'icons8-badtz-maru-100.png' },
+  { icon: CharacterIcon.HelloKitty, displayName: 'Hello Kitty', fileName: 'icons8-hello-kitty-100.png' },
+  { icon: CharacterIcon.Keroppi, displayName: 'Keroppi', fileName: 'icons8-keroppi-100.png' },
+  { icon: CharacterIcon.Pochacco, displayName: 'Pochacco', fileName: 'icons8-pochacco-100.png' }
 ]; 
