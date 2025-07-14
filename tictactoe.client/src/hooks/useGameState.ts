@@ -31,6 +31,7 @@ export interface GameStateHook {
   makeMove: (row: number, col: number) => Promise<void>;
   getWaitingGames: () => Promise<void>;
   resetGame: () => Promise<void>;
+  leaveGame: () => Promise<void>;
   clearError: () => void;
   
   // Game info
@@ -260,6 +261,21 @@ export const useGameState = (): GameStateHook => {
     }
   }, [currentGame]);
 
+  const leaveGame = useCallback(async () => {
+    if (!currentGame) return;
+
+    try {
+      await gameService.disconnect();
+      setIsConnected(false);
+      setConnectionState(gameService.getConnectionState());
+      setCurrentGame(null);
+      setCurrentPlayerId(null);
+      setError(null);
+    } catch (error) {
+      setError(`Failed to leave game: ${error}`);
+    }
+  }, [currentGame]);
+
   const clearError = useCallback(() => {
     setError(null);
   }, []);
@@ -301,6 +317,7 @@ export const useGameState = (): GameStateHook => {
     makeMove,
     getWaitingGames,
     resetGame,
+    leaveGame,
     clearError,
     
     // Game info

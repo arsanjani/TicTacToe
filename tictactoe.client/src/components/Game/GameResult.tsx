@@ -8,7 +8,7 @@ interface GameResultProps {
 }
 
 const GameResult = ({ gameState }: GameResultProps) => {
-  const { currentGame, resetGame, me, opponent } = gameState;
+  const { currentGame, resetGame, me, opponent, leaveGame, error } = gameState;
 
   if (!currentGame || !currentGame.endedAt) {
     return null;
@@ -55,6 +55,10 @@ const GameResult = ({ gameState }: GameResultProps) => {
 
   const handlePlayAgain = () => {
     resetGame();
+  };
+
+  const handleLeaveGame = () => {
+    leaveGame();
   };
 
   return (
@@ -106,9 +110,24 @@ const GameResult = ({ gameState }: GameResultProps) => {
             <button onClick={handlePlayAgain} className="play-again-button">
               🔄 Play Again
             </button>
+            <button onClick={handleLeaveGame} className="result-leave-game-button">
+              🚪 Leave Game
+            </button>
           </div>
         </div>
       </div>
+
+      {error && currentGame.state === 'Finished' && (
+        <div className="disconnection-overlay">
+          <div className="disconnection-message">
+            <div className="disconnection-icon">😱</div>
+            <h2>{error}</h2>
+            <button onClick={() => window.location.href = '/'} className="back-to-home-button">
+              Go to Home Page
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

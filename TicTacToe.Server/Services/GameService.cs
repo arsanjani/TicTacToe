@@ -19,6 +19,21 @@ public class GameService : IGameService
 {
     private readonly ConcurrentDictionary<string, Game> _games = new();
     private readonly ConcurrentDictionary<string, string> _playerToGame = new();
+    private readonly Random _random = new();
+
+    /// <summary>
+    /// Randomly selects the first player between Player1 and Player2 to ensure fairness
+    /// </summary>
+    /// <param name="game">The game instance</param>
+    /// <returns>The randomly selected player to go first</returns>
+    private Player? SelectRandomFirstPlayer(Game game)
+    {
+        if (game.Player1 == null || game.Player2 == null)
+            return null;
+
+        // Randomly choose between Player1 and Player2
+        return _random.Next(2) == 0 ? game.Player1 : game.Player2;
+    }
 
     public async Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false)
     {
@@ -68,7 +83,7 @@ public class GameService : IGameService
         };
 
         game.State = GameState.InProgress;
-        game.CurrentPlayer = game.Player1; // Player1 goes first
+        game.CurrentPlayer = SelectRandomFirstPlayer(game); // Randomly select first player for fairness
         game.StartedAt = DateTime.UtcNow;
 
         _playerToGame[playerId] = gameId;
@@ -175,7 +190,7 @@ public class GameService : IGameService
         game.Board = new CellState[3, 3];
         game.State = GameState.InProgress;
         game.Result = GameResult.None;
-        game.CurrentPlayer = game.Player1; // Player1 goes first
+        game.CurrentPlayer = SelectRandomFirstPlayer(game); // Randomly select first player for fairness
         game.MoveCount = 0;
         game.StartedAt = DateTime.UtcNow;
         game.EndedAt = null;

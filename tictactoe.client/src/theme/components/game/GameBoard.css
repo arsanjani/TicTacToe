@@ -185,11 +185,6 @@
   }
 }
 
-/* Character-based cell styling - no longer needed as we use icons */
-.cell.filled .cell-content {
-  /* Icons handle their own styling */
-}
-
 .cell::before {
   content: '';
   position: absolute;

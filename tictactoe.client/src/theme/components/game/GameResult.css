@@ -197,6 +197,99 @@
   transform: translateY(-1px);
 }
 
+.result-leave-game-button {
+  padding: 1.2rem 2.5rem;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.result-leave-game-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+.result-leave-game-button:active {
+  transform: translateY(-1px);
+}
+
+/* Disconnection overlay styles */
+.disconnection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+}
+
+.disconnection-message {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.disconnection-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.disconnection-message h2 {
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.back-to-home-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.back-to-home-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Large Desktop (1440px+) */
 @media (min-width: 1440px) {
   .game-result-modal {
@@ -244,6 +337,11 @@
   }
   
   .play-again-button {
+    font-size: 1.3rem;
+    padding: 1.4rem 3rem;
+  }
+  
+  .result-leave-game-button {
     font-size: 1.3rem;
     padding: 1.4rem 3rem;
   }
@@ -299,6 +397,11 @@
     font-size: 1.25rem;
     padding: 1.3rem 2.8rem;
   }
+  
+  .result-leave-game-button {
+    font-size: 1.25rem;
+    padding: 1.3rem 2.8rem;
+  }
 }
 
 /* Tablet (768px - 1023px) */
@@ -348,6 +451,11 @@
   }
   
   .play-again-button {
+    font-size: 1.1rem;
+    padding: 1.1rem 2.2rem;
+  }
+  
+  .result-leave-game-button {
     font-size: 1.1rem;
     padding: 1.1rem 2.2rem;
   }
@@ -412,6 +520,11 @@
   }
   
   .play-again-button {
+    font-size: 1rem;
+    padding: 1rem 2rem;
+  }
+  
+  .result-leave-game-button {
     font-size: 1rem;
     padding: 1rem 2rem;
   }
@@ -480,6 +593,11 @@
     font-size: 0.9rem;
     padding: 0.9rem 1.5rem;
   }
+  
+  .result-leave-game-button {
+    font-size: 0.9rem;
+    padding: 0.9rem 1.5rem;
+  }
 }
 
 /* Landscape orientation on mobile */
@@ -542,6 +660,29 @@
     font-size: 0.8rem;
     padding: 0.8rem 1.2rem;
   }
+  
+  .result-leave-game-button {
+    font-size: 0.8rem;
+    padding: 0.8rem 1.2rem;
+  }
+  
+  .disconnection-message {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .disconnection-message h2 {
+    font-size: 1.2rem;
+  }
+  
+  .disconnection-icon {
+    font-size: 2.5rem;
+  }
+  
+  .back-to-home-button {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
 }
 
 /* Touch devices optimization */
@@ -559,6 +700,14 @@
   }
   
   .play-again-button:active {
+    transform: scale(0.98);
+  }
+  
+  .leave-game-button:hover {
+    transform: none;
+  }
+  
+  .leave-game-button:active {
     transform: scale(0.98);
   }
 }
@@ -591,6 +740,10 @@
   }
   
   .play-again-button:hover {
+    transform: none;
+  }
+  
+  .result-leave-game-button:hover {
     transform: none;
   }
   
@@ -668,6 +821,11 @@
   }
   
   .play-again-button {
+    font-size: 0.8rem;
+    padding: 0.8rem 1.2rem;
+  }
+  
+  .leave-game-button {
     font-size: 0.8rem;
     padding: 0.8rem 1.2rem;
   }
