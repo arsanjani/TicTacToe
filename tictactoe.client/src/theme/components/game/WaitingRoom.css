@@ -542,3 +542,148 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 } 
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .waiting-room {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  }
+  
+  .waiting-container {
+    background: rgba(30, 30, 30, 0.95);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .waiting-header h2 {
+    color: #e0e0e0;
+  }
+  
+  .waiting-subtitle {
+    color: #b0b0b0;
+  }
+  
+  .waiting-player-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .waiting-player-details h3 {
+    color: #e0e0e0;
+  }
+  
+  .waiting-player-details p {
+    color: #b0b0b0;
+  }
+  
+  .waiting-game-creator div h4 {
+    color: #e0e0e0;
+  }
+  
+  .waiting-game-creator div p {
+    color: #b0b0b0;
+  }
+  
+  .waiting-input-group label {
+    color: #e0e0e0;
+  }
+  
+  .waiting-player-name-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+  }
+  
+  .waiting-player-name-input::placeholder {
+    color: #999;
+  }
+  
+  .waiting-player-name-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  }
+  
+  .waiting-character-option {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .waiting-character-option:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  }
+  
+  .waiting-character-name {
+    color: #e0e0e0;
+  }
+  
+  .waiting-share-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+  }
+  
+  .waiting-share-description {
+    color: #b0b0b0;
+  }
+  
+  .waiting-status {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .waiting-status p {
+    color: #b0b0b0;
+  }
+  
+  .waiting-games-section h3 {
+    color: #e0e0e0;
+  }
+  
+  .waiting-no-games {
+    background: rgba(255, 255, 255, 0.1);
+    color: #b0b0b0;
+  }
+  
+  .waiting-game-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .waiting-game-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .waiting-game-card-info {
+    color: #b0b0b0;
+  }
+  
+  .waiting-game-id {
+    background: rgba(102, 126, 234, 0.2);
+    color: #8fa4f3;
+  }
+  
+  .waiting-private-indicator {
+    color: #ff9999;
+  }
+  
+  .waiting-private-game-indicator {
+    background: rgba(225, 112, 85, 0.15);
+    color: #ff9999;
+  }
+  
+  .waiting-spinner {
+    border: 4px solid rgba(102, 126, 234, 0.3);
+    border-top: 4px solid #8fa4f3;
+  }
+  
+  .waiting-character-selection {
+    scrollbar-color: #667eea #333;
+  }
+  
+  .waiting-character-selection::-webkit-scrollbar-track {
+    background: #333;
+  }
+} 
