@@ -36,7 +36,7 @@ jobs:
       run: npm run build  # or tsc -b && vite build if custom
 
     - name: Publish .NET App
-      run: dotnet publish ./TicTacToe/TicTacToe.Server/TicTacToe.Server.csproj -c Release -o published
+      run: dotnet publish ./TicTacToe.Server/TicTacToe.Server.csproj -c Release -o published
 
     - name: Upload via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
