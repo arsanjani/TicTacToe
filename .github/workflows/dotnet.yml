@@ -44,5 +44,7 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftp
+        port: 21
         local-dir: ./published/
-        server-dir: /  # Adjust this if you have a subfolder on the server      
+        server-dir: /www.tictactoe.somee.com/
