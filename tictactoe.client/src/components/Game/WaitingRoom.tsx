@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { GameStateHook } from '../../hooks/useGameState';
 import { CHARACTER_ICONS, CharacterIcon } from '../../types/game';
+import { shouldUseWebShare, shareContent, copyToClipboard } from '../../utils/deviceUtils';
 import '../../theme/components/game/WaitingRoom.css';
 
 interface WaitingRoomProps {
@@ -13,6 +14,10 @@ const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
   const [playerName, setPlayerName] = useState('');
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterIcon>(CharacterIcon.Circle);
   const [isJoining, setIsJoining] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastExiting, setToastExiting] = useState(false);
+  const useMobileShare = shouldUseWebShare();
 
   useEffect(() => {
     // Refresh waiting games every 3 seconds
@@ -25,6 +30,30 @@ const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
 
     return () => clearInterval(interval);
   }, [getWaitingGames]);
+
+  // Auto-hide toast after 3 seconds
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        hideToast();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
+  const hideToast = () => {
+    setToastExiting(true);
+    setTimeout(() => {
+      setShowToast(false);
+      setToastExiting(false);
+    }, 300); // Match the CSS animation duration
+  };
+
+  const showToastMessage = () => {
+    setShowToast(true);
+    setToastExiting(false);
+  };
 
   const handleJoinGame = async (gameId: string) => {
     if (!playerName.trim()) return;
@@ -42,12 +71,40 @@ const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
     return `${window.location.origin}?gameId=${currentGame.id}`;
   };
 
-  const copyToClipboard = async () => {
+  const handleShareOrCopy = async () => {
+    const link = getShareableLink();
+    setIsSharing(true);
+    
     try {
-      await navigator.clipboard.writeText(getShareableLink());
-      // Could add a toast notification here
+      if (useMobileShare) {
+        // Use Web Share API on mobile devices
+        const shared = await shareContent({
+          title: 'Join my Tic Tac Toe game!',
+          text: `Join me for a game of Tic Tac Toe! Click the link to play.`,
+          url: link
+        });
+        
+        if (!shared) {
+          // User cancelled sharing, fallback to clipboard
+          await copyToClipboard(link);
+          showToastMessage();
+        }
+      } else {
+        // Use clipboard copy on desktop
+        await copyToClipboard(link);
+        showToastMessage();
+      }
     } catch (err) {
-      console.error('Failed to copy: ', err);
+      console.error('Failed to share or copy: ', err);
+      // Try clipboard as fallback
+      try {
+        await copyToClipboard(link);
+        showToastMessage();
+      } catch (clipboardErr) {
+        console.error('Clipboard fallback also failed: ', clipboardErr);
+      }
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -91,8 +148,17 @@ const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
                   readOnly
                   className="waiting-share-input"
                 />
-                <button onClick={copyToClipboard} className="waiting-copy-button">
-                  📋 Copy
+                <button 
+                  onClick={handleShareOrCopy} 
+                  disabled={isSharing}
+                  className="waiting-copy-button"
+                >
+                  {isSharing 
+                    ? '⏳ Sharing...' 
+                    : useMobileShare 
+                      ? '🔗 Share' 
+                      : '📋 Copy'
+                  }
                 </button>
               </div>
               <p className="waiting-share-description">
@@ -105,6 +171,17 @@ const WaitingRoom = ({ gameState, joinGameId }: WaitingRoomProps) => {
             <div className="waiting-spinner"></div>
             <p>Waiting for opponent to join...</p>
           </div>
+
+          {/* Toast Notification */}
+          {showToast && (
+            <div className={`waiting-toast ${toastExiting ? 'waiting-toast-exit' : ''}`}>
+              <div className="waiting-toast-icon">✅</div>
+              <div className="waiting-toast-content">
+                <div className="waiting-toast-title">Link Copied!</div>
+                <div className="waiting-toast-message">Game link has been copied to clipboard</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

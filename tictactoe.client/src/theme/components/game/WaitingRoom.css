@@ -384,9 +384,15 @@
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.waiting-copy-button:hover {
+.waiting-copy-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.waiting-copy-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .waiting-status {
@@ -684,5 +690,116 @@
   
   .waiting-character-selection::-webkit-scrollbar-track {
     background: #333;
+  }
+} 
+
+/* Toast Notification Styles */
+.waiting-toast {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, #00b894, #00a085);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 280px;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: toastSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-origin: right top;
+}
+
+.waiting-toast.waiting-toast-exit {
+  animation: toastSlideOut 0.3s ease-in-out;
+}
+
+.waiting-toast-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.waiting-toast-content {
+  flex: 1;
+}
+
+.waiting-toast-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.waiting-toast-message {
+  font-size: 0.875rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+@keyframes toastSlideIn {
+  0% {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  0% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Toast responsive design */
+@media (max-width: 767px) {
+  .waiting-toast {
+    top: 1rem;
+    right: 1rem;
+    left: 1rem;
+    min-width: auto;
+    max-width: none;
+  }
+  
+  @keyframes toastSlideIn {
+    0% {
+      transform: translateY(-100%) scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes toastSlideOut {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100%) scale(0.9);
+      opacity: 0;
+    }
+  }
+}
+
+/* Dark mode support for toast */
+@media (prefers-color-scheme: dark) {
+  .waiting-toast {
+    background: linear-gradient(135deg, #00b894, #00a085);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
   }
 } 
