@@ -14,6 +14,20 @@ const GameResult = ({ gameState }: GameResultProps) => {
     return null;
   }
 
+  const formatGameDuration = (durationInSeconds: number) => {
+    const hours = Math.floor(durationInSeconds / 3600);
+    const minutes = Math.floor((durationInSeconds % 3600) / 60);
+    const seconds = durationInSeconds % 60;
+
+    if (durationInSeconds < 60) {
+      return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+    } else if (durationInSeconds < 3600) {
+      return `${minutes} minute${minutes !== 1 ? 's' : ''} ${seconds} second${seconds !== 1 ? 's' : ''}`;
+    } else {
+      return `${hours} hour${hours !== 1 ? 's' : ''} ${minutes} minute${minutes !== 1 ? 's' : ''} ${seconds} second${seconds !== 1 ? 's' : ''}`;
+    }
+  };
+
   const getResultMessage = () => {
     switch (currentGame.result) {
       case GameResultType.Player1Wins:
@@ -30,11 +44,11 @@ const GameResult = ({ gameState }: GameResultProps) => {
   const getResultClass = () => {
     switch (currentGame.result) {
       case GameResultType.Player1Wins:
-        return currentGame.player1?.id === me?.id ? 'win' : 'lose';
+        return currentGame.player1?.id === me?.id ? 'result-win' : 'result-lose';
       case GameResultType.Player2Wins:
-        return currentGame.player2?.id === me?.id ? 'win' : 'lose';
+        return currentGame.player2?.id === me?.id ? 'result-win' : 'result-lose';
       case GameResultType.Draw:
-        return 'draw';
+        return 'result-draw';
       default:
         return '';
     }
@@ -73,14 +87,14 @@ const GameResult = ({ gameState }: GameResultProps) => {
             {getResultMessage()}
           </h2>
           
-          <div className="game-stats">
+          <div className="result-game-stats">
             <p>Total moves: {currentGame.moveCount}</p>
-            <p>Game duration: {Math.round((new Date(currentGame.endedAt).getTime() - new Date(currentGame.startedAt || 0).getTime()) / 1000)}s</p>
+            <p>Game duration: {formatGameDuration(Math.round((new Date(currentGame.endedAt).getTime() - new Date(currentGame.startedAt || 0).getTime()) / 1000))}</p>
           </div>
           
-          <div className="players-summary">
-            <div className="player-card">
-              <div className="player-symbol">
+          <div className="result-players-summary">
+            <div className="result-player-card">
+              <div className="result-player-symbol">
                 {currentGame.player1?.characterIcon && (
                   <img
                     src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === currentGame.player1?.characterIcon)?.fileName}`}
@@ -89,11 +103,11 @@ const GameResult = ({ gameState }: GameResultProps) => {
                   />
                 )}
               </div>
-              <div className="player-name">{currentGame.player1?.name}</div>
+              <div className="result-player-name">{currentGame.player1?.name}</div>
             </div>
-            <div className="vs">VS</div>
-            <div className="player-card">
-              <div className="player-symbol">
+            <div className="result-vs">VS</div>
+            <div className="result-player-card">
+              <div className="result-player-symbol">
                 {currentGame.player2?.characterIcon && (
                   <img
                     src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === currentGame.player2?.characterIcon)?.fileName}`}
@@ -102,12 +116,12 @@ const GameResult = ({ gameState }: GameResultProps) => {
                   />
                 )}
               </div>
-              <div className="player-name">{currentGame.player2?.name}</div>
+              <div className="result-player-name">{currentGame.player2?.name}</div>
             </div>
           </div>
           
           <div className="result-actions">
-            <button onClick={handlePlayAgain} className="play-again-button">
+            <button onClick={handlePlayAgain} className="result-play-again-button">
               🔄 Play Again
             </button>
             <button onClick={handleLeaveGame} className="result-leave-game-button">

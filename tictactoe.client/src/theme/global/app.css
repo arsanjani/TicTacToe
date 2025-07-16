@@ -284,7 +284,7 @@
 }
 
 .player-symbol {
-  width: 35px;
+  width: 100%;
   height: 35px;
   border-radius: 50%;
   display: flex;
@@ -293,7 +293,6 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: white;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
 
@@ -314,6 +313,7 @@
   font-weight: bold;
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  padding-top: 1rem;
 }
 
 .game-actions {
@@ -379,7 +379,7 @@
   }
   
   .player-symbol {
-    width: 40px;
+    width: 100%;
     height: 40px;
     font-size: 1.4rem;
   }
@@ -462,7 +462,7 @@
   }
   
   .player-symbol {
-    width: 38px;
+    width: 100%;
     height: 38px;
     font-size: 1.3rem;
   }
@@ -545,7 +545,7 @@
   }
   
   .player-symbol {
-    width: 32px;
+    width: 100%;
     height: 32px;
     font-size: 1.1rem;
   }
@@ -634,7 +634,7 @@
   }
   
   .player-symbol {
-    width: 28px;
+    width: 100%;
     height: 28px;
     font-size: 1rem;
   }
@@ -729,7 +729,7 @@
   }
   
   .player-symbol {
-    width: 24px;
+    width: 100%;
     height: 24px;
     font-size: 0.9rem;
   }
@@ -822,7 +822,7 @@
   }
   
   .player-symbol {
-    width: 22px;
+    width: 100%;
     height: 22px;
     font-size: 0.8rem;
   }
@@ -1072,7 +1072,7 @@
   }
   
   .player-symbol {
-    width: 20px;
+    width: 100%;
     height: 20px;
     font-size: 0.8rem;
   }
