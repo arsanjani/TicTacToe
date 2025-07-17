@@ -1,0 +1,299 @@
+/* SweetAlert2 Confirmation Component Styles */
+/* This file contains reusable styles for confirmation dialogs using SweetAlert2 */
+
+/* Main popup container */
+.swal-popup {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 20px !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Title styling */
+.swal-title {
+  color: white !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Content text styling */
+.swal2-html-container {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  line-height: 1.5 !important;
+}
+
+/* Confirm button (primary action) */
+.swal-confirm-button {
+  background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3) !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+  font-size: 0.9rem !important;
+}
+
+.swal-confirm-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4) !important;
+  background: linear-gradient(135deg, #c0392b, #a93226) !important;
+}
+
+.swal-confirm-button:focus {
+  outline: none !important;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4), 0 0 0 3px rgba(231, 76, 60, 0.3) !important;
+}
+
+/* Cancel button (secondary action) */
+.swal-cancel-button {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  backdrop-filter: blur(5px) !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+  font-size: 0.9rem !important;
+}
+
+.swal-cancel-button:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+.swal-cancel-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Warning icon styling */
+.swal2-icon.swal2-warning {
+  border-color: #f1c40f !important;
+  color: #f1c40f !important;
+  background: rgba(241, 196, 15, 0.1) !important;
+}
+
+.swal2-icon.swal2-warning .swal2-icon-content {
+  color: #f1c40f !important;
+  font-weight: bold !important;
+}
+
+/* Success icon styling */
+.swal2-icon.swal2-success {
+  border-color: #27ae60 !important;
+  color: #27ae60 !important;
+  background: rgba(39, 174, 96, 0.1) !important;
+}
+
+/* Error icon styling */
+.swal2-icon.swal2-error {
+  border-color: #e74c3c !important;
+  color: #e74c3c !important;
+  background: rgba(231, 76, 60, 0.1) !important;
+}
+
+/* Info icon styling */
+.swal2-icon.swal2-info {
+  border-color: #3498db !important;
+  color: #3498db !important;
+  background: rgba(52, 152, 219, 0.1) !important;
+}
+
+/* Question icon styling */
+.swal2-icon.swal2-question {
+  border-color: #9b59b6 !important;
+  color: #9b59b6 !important;
+  background: rgba(155, 89, 182, 0.1) !important;
+}
+
+/* Actions container */
+.swal2-actions {
+  gap: 1rem !important;
+  margin-top: 2rem !important;
+}
+
+/* Input styling for forms */
+.swal2-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 10px !important;
+  color: white !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  backdrop-filter: blur(5px) !important;
+  transition: all 0.3s ease !important;
+}
+
+.swal2-input:focus {
+  outline: none !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+}
+
+.swal2-input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Textarea styling */
+.swal2-textarea {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 10px !important;
+  color: white !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  backdrop-filter: blur(5px) !important;
+  transition: all 0.3s ease !important;
+  resize: vertical !important;
+  min-height: 100px !important;
+}
+
+.swal2-textarea:focus {
+  outline: none !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+}
+
+.swal2-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Validation message styling */
+.swal2-validation-message {
+  background: rgba(231, 76, 60, 0.9) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  margin-top: 0.5rem !important;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .swal-popup {
+    margin: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+  
+  .swal-confirm-button,
+  .swal-cancel-button {
+    padding: 0.6rem 1.2rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .swal2-actions {
+    flex-direction: column !important;
+    gap: 0.8rem !important;
+  }
+  
+  .swal2-input,
+  .swal2-textarea {
+    font-size: 0.9rem !important;
+    padding: 0.6rem 0.8rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .swal-popup {
+    border-radius: 15px !important;
+  }
+  
+  .swal-title {
+    font-size: 1.3rem !important;
+  }
+  
+  .swal2-html-container {
+    font-size: 0.9rem !important;
+  }
+  
+  .swal-confirm-button,
+  .swal-cancel-button {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.75rem !important;
+    width: 100% !important;
+  }
+}
+
+/* Alternative color schemes for different contexts */
+
+/* Success theme variant */
+.swal-success-theme .swal-popup {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%) !important;
+}
+
+.swal-success-theme .swal-confirm-button {
+  background: linear-gradient(135deg, #27ae60, #229954) !important;
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3) !important;
+}
+
+.swal-success-theme .swal-confirm-button:hover {
+  box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4) !important;
+  background: linear-gradient(135deg, #229954, #1e8449) !important;
+}
+
+/* Info theme variant */
+.swal-info-theme .swal-popup {
+  background: linear-gradient(135deg, #3498db 0%, #5dade2 100%) !important;
+}
+
+.swal-info-theme .swal-confirm-button {
+  background: linear-gradient(135deg, #3498db, #2980b9) !important;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3) !important;
+}
+
+.swal-info-theme .swal-confirm-button:hover {
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4) !important;
+  background: linear-gradient(135deg, #2980b9, #2471a3) !important;
+}
+
+/* Dark theme variant */
+.swal-dark-theme .swal-popup {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.swal-dark-theme .swal-confirm-button {
+  background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .swal-confirm-button,
+  .swal-cancel-button {
+    transition: none !important;
+  }
+  
+  .swal-confirm-button:hover,
+  .swal-cancel-button:hover {
+    transform: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .swal-popup {
+    border-width: 3px !important;
+    border-color: white !important;
+  }
+  
+  .swal-confirm-button,
+  .swal-cancel-button {
+    border-width: 2px !important;
+    font-weight: 700 !important;
+  }
+} 

@@ -4,6 +4,9 @@
 @import './global/index.css';
 @import './global/app.css';
 
+/* Reusable Component Styles */
+@import './components/confirmation.css';
+
 /* Game Component Styles */
 @import './components/game/GameBoard.css';
 @import './components/game/GameLobby.css';

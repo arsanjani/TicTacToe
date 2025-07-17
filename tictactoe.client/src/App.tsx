@@ -134,14 +134,6 @@ function App() {
                 
                 <GameBoard gameState={gameState} />
                 
-                <div className="game-actions">
-                    <button 
-                        onClick={() => window.location.reload()} 
-                        className="leave-game-button"
-                    >
-                        Leave Game
-                    </button>
-                </div>
             </div>
             
             {gameState.isGameFinished && (

@@ -1,5 +1,6 @@
 import type { GameStateHook } from '../../hooks/useGameState';
 import { CHARACTER_ICONS } from '../../types/game';
+import { showDangerConfirmation } from '../../utils/confirmationDialog';
 import '../../theme/components/game/GameBoard.css';
 
 interface GameBoardProps {
@@ -7,11 +8,24 @@ interface GameBoardProps {
 }
 
 const GameBoard = ({ gameState }: GameBoardProps) => {
-  const { currentGame, makeMove, canMakeMove, isMyTurn, me, error } = gameState;
+  const { currentGame, makeMove, canMakeMove, isMyTurn, me, error, leaveGame } = gameState;
 
   const handleCellClick = (row: number, col: number) => {
     if (canMakeMove(row, col)) {
       makeMove(row, col);
+    }
+  };
+
+  const handleLeaveGame = async () => {
+    const confirmed = await showDangerConfirmation(
+      'Leave Game?',
+      'Are you sure you want to leave the game? This action cannot be undone.'
+    );
+
+    if (confirmed) {
+      await leaveGame();
+      // Redirect to home page after leaving
+      window.location.href = '/';
     }
   };
 
@@ -116,6 +130,16 @@ const GameBoard = ({ gameState }: GameBoardProps) => {
               </span>
             )}
           </div>
+        </div>
+        
+        <div className="game-actions">
+          <button 
+            onClick={handleLeaveGame}
+            className="leave-game-button"
+            title="Leave Game"
+          >
+            🚪 Leave Game
+          </button>
         </div>
       </div>
 
