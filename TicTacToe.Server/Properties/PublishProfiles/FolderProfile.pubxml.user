@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Projects\TicTacToe\TicTacToe.Server\bin\Release\net9.0\publish\</_PublishTargetUrl>
+    <History>True|2025-07-18T22:19:29.8221544Z||;True|2025-07-19T01:37:28.8579685+03:30||;True|2025-07-19T01:35:40.2014504+03:30||;True|2025-07-16T22:43:35.0962737+03:30||;True|2025-07-16T11:48:04.7602839+03:30||;True|2025-07-15T20:35:48.8560228+03:30||;True|2025-07-14T22:58:02.6518429+03:30||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

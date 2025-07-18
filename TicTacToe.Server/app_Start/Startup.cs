@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using TicTacToe.Server.Services;
 using TicTacToe.Server.Hubs;
+using Microsoft.EntityFrameworkCore;
+using TicTacToe.Server.Data;
+using TicTacToe.Server.Mappings;
 
 namespace TicTacToe.Server.app_Start
 {
@@ -28,6 +31,13 @@ namespace TicTacToe.Server.app_Start
 
             // Add OpenAPI/Swagger
             services.AddOpenApi();
+
+            // Add Entity Framework
+            services.AddDbContext<TicTacToeDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Add AutoMapper
+            services.AddAutoMapper(typeof(GameMappingProfile));
 
             // Add CORS
             services.AddCors(options =>
@@ -54,7 +64,7 @@ namespace TicTacToe.Server.app_Start
             // Add SignalR
             services.AddSignalR();
 
-            // Add game services
+            // Add game services (kept as Singleton for in-memory state, uses IServiceScopeFactory for DB operations)
             services.AddSingleton<IGameService, GameService>();
 
             // Configure Kestrel options for development

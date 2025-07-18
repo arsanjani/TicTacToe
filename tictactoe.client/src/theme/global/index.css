@@ -28,6 +28,20 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  padding-bottom: 60px; /* Space for footer */
+}
+
+/* Responsive footer spacing */
+@media (max-width: 767px) and (orientation: landscape) {
+  body {
+    padding-bottom: 45px;
+  }
+}
+
+@media (max-width: 320px) {
+  body {
+    padding-bottom: 55px;
+  }
 }
 
 h1 {

@@ -67,3 +67,44 @@ export default tseslint.config([
   },
 ])
 ```
+
+## Game API Service
+
+The project includes a REST API service for managing games through HTTP endpoints.
+
+### Usage
+
+```typescript
+import { gamesApiService } from './services/gamesApiService';
+import { GameState } from './types/game';
+
+// Get a game by its GameId
+const game = await gamesApiService.getByGameId('game-123');
+
+// Get all active games
+const activeGames = await gamesApiService.getActiveGames();
+
+// Get games by player ID
+const playerGames = await gamesApiService.getByPlayerId('player-456');
+
+// Get games by state
+const inProgressGames = await gamesApiService.getByState(GameState.InProgress);
+
+// Update a game
+await gamesApiService.updateByGameId('game-123', {
+  state: GameState.Finished,
+  result: GameResult.Player1Wins,
+  winnerId: 'player-456',
+  endedAt: new Date()
+});
+```
+
+### Available Types
+
+The service uses strongly-typed DTOs that match the server-side models:
+
+```typescript
+import type { GameDto, CreateGameRequest, UpdateGameRequest } from './types/gameDto';
+// or import from the main types file:
+import type { GameDto } from './types/game';
+```
