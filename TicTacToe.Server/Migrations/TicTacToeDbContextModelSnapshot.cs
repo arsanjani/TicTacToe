@@ -35,7 +35,7 @@ namespace TicTacToe.Server.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<TimeSpan>("Duration")
+                    b.Property<TimeSpan?>("Duration")
                         .HasColumnType("time");
 
                     b.Property<DateTime?>("EndedAt")

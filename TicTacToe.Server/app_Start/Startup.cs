@@ -64,7 +64,7 @@ namespace TicTacToe.Server.app_Start
             // Add SignalR
             services.AddSignalR();
 
-            // Add game services
+            // Add game services (kept as Singleton for in-memory state, uses IServiceScopeFactory for DB operations)
             services.AddSingleton<IGameService, GameService>();
 
             // Configure Kestrel options for development

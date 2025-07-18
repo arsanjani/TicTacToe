@@ -1,5 +1,9 @@
 using System.Collections.Concurrent;
 using TicTacToe.Server.Models;
+using TicTacToe.Server.Data;
+using TicTacToe.Server.Entities;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace TicTacToe.Server.Services;
 
@@ -20,6 +24,12 @@ public class GameService : IGameService
     private readonly ConcurrentDictionary<string, Game> _games = new();
     private readonly ConcurrentDictionary<string, string> _playerToGame = new();
     private readonly Random _random = new();
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    public GameService(IServiceScopeFactory serviceScopeFactory)
+    {
+        _serviceScopeFactory = serviceScopeFactory;
+    }
 
     /// <summary>
     /// Randomly selects the first player between Player1 and Player2 to ensure fairness
@@ -33,6 +43,36 @@ public class GameService : IGameService
 
         // Randomly choose between Player1 and Player2
         return _random.Next(2) == 0 ? game.Player1 : game.Player2;
+    }
+
+    /// <summary>
+    /// Convert Game model to GameEntity for database operations
+    /// </summary>
+    private GameEntity ConvertToEntity(Game game)
+    {
+        return new GameEntity
+        {
+            GameId = game.Id,
+            Player1Id = game.Player1?.Id ?? string.Empty,
+            Player1Name = game.Player1?.Name ?? string.Empty,
+            Player1Character = game.Player1?.CharacterIcon ?? CharacterIcon.Cross,
+            Player2Id = game.Player2?.Id,
+            Player2Name = game.Player2?.Name,
+            Player2Character = game.Player2?.CharacterIcon,
+            IsPrivate = game.IsPrivate,
+            State = game.State,
+            Result = game.Result,
+            WinnerId = game.Result == GameResult.Player1Wins ? game.Player1?.Id :
+                      game.Result == GameResult.Player2Wins ? game.Player2?.Id : null,
+            WinnerName = game.Result == GameResult.Player1Wins ? game.Player1?.Name :
+                        game.Result == GameResult.Player2Wins ? game.Player2?.Name : null,
+            CreatedAt = game.CreatedAt,
+            StartedAt = game.StartedAt,
+            EndedAt = game.EndedAt,
+            TotalMoves = game.MoveCount,
+            Duration = game.StartedAt.HasValue && game.EndedAt.HasValue ?
+                      game.EndedAt.Value - game.StartedAt.Value : null
+        };
     }
 
     public async Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false)
@@ -55,7 +95,22 @@ public class GameService : IGameService
         _games[game.Id] = game;
         _playerToGame[playerId] = game.Id;
 
-        return await Task.FromResult(game);
+        // Save to database
+        try
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
+            var gameEntity = ConvertToEntity(game);
+            context.Games.Add(gameEntity);
+            await context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't fail the in-memory operation
+            Console.WriteLine($"Failed to save game to database: {ex.Message}");
+        }
+
+        return game;
     }
 
     public async Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName, CharacterIcon characterIcon)
@@ -88,7 +143,30 @@ public class GameService : IGameService
 
         _playerToGame[playerId] = gameId;
 
-        return await Task.FromResult(game);
+        // Update database with player 2 information
+        try
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
+            var gameEntity = await context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+            if (gameEntity != null)
+            {
+                gameEntity.Player2Id = game.Player2.Id;
+                gameEntity.Player2Name = game.Player2.Name;
+                gameEntity.Player2Character = game.Player2.CharacterIcon;
+                gameEntity.State = game.State;
+                gameEntity.StartedAt = game.StartedAt;
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't fail the in-memory operation
+            Console.WriteLine($"Failed to update game in database: {ex.Message}");
+        }
+
+        return game;
     }
 
     public async Task<Game?> GetGameAsync(string gameId)
@@ -133,9 +211,37 @@ public class GameService : IGameService
             game.Result = result;
             game.State = GameState.Finished;
             game.EndedAt = DateTime.UtcNow;
+
+            // Update database with final game statistics
+            try
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
+                var gameEntity = await context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+                if (gameEntity != null)
+                {
+                    gameEntity.State = game.State;
+                    gameEntity.Result = game.Result;
+                    gameEntity.EndedAt = game.EndedAt;
+                    gameEntity.TotalMoves = game.MoveCount;
+                    gameEntity.WinnerId = game.Result == GameResult.Player1Wins ? game.Player1?.Id :
+                                         game.Result == GameResult.Player2Wins ? game.Player2?.Id : null;
+                    gameEntity.WinnerName = game.Result == GameResult.Player1Wins ? game.Player1?.Name :
+                                           game.Result == GameResult.Player2Wins ? game.Player2?.Name : null;
+                    gameEntity.Duration = game.StartedAt.HasValue && game.EndedAt.HasValue ? 
+                                         game.EndedAt.Value - game.StartedAt.Value : null;
+
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't fail the in-memory operation
+                Console.WriteLine($"Failed to update completed game in database: {ex.Message}");
+            }
         }
 
-        return await Task.FromResult(true);
+        return true;
     }
 
     public async Task<bool> RemovePlayerAsync(string playerId)

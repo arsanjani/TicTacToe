@@ -33,7 +33,7 @@ namespace TicTacToe.Server.Migrations
                     StartedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TotalMoves = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false)
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: true)
                 },
                 constraints: table =>
                 {

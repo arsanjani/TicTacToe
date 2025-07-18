@@ -55,6 +55,5 @@ public class GameEntity : BaseEntity
     [Required]
     public int TotalMoves { get; set; } = 0;
 
-    [Required]
-    public TimeSpan? Duration { get; set; }
+    public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
 } 

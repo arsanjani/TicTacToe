@@ -12,7 +12,7 @@ using TicTacToe.Server.Data;
 namespace TicTacToe.Server.Migrations
 {
     [DbContext(typeof(TicTacToeDbContext))]
-    [Migration("20250717204245_InitialCreate")]
+    [Migration("20250718155300_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace TicTacToe.Server.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<TimeSpan>("Duration")
+                    b.Property<TimeSpan?>("Duration")
                         .HasColumnType("time");
 
                     b.Property<DateTime?>("EndedAt")
