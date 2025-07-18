@@ -5,6 +5,7 @@ import GameLobby from './components/Game/GameLobby';
 import WaitingRoom from './components/Game/WaitingRoom';
 import GameBoard from './components/Game/GameBoard';
 import GameResult from './components/Game/GameResult';
+import Footer from './components/Footer';
 import './theme/global/app.css';
 
 function App() {
@@ -46,100 +47,115 @@ function App() {
     // Show loading while connecting
     if (isConnecting) {
         return (
-            <div className="app-loading">
-                <div className="loading-content">
-                    <div className="spinner"></div>
-                    <p>Connecting to game server...</p>
+            <>
+                <div className="app-loading">
+                    <div className="loading-content">
+                        <div className="spinner"></div>
+                        <p>Connecting to game server...</p>
+                    </div>
                 </div>
-            </div>
+                <Footer />
+            </>
         );
     }
 
     // Show error message if there's a connection error
     if (gameState.error && !gameState.isConnected) {
         return (
-            <div className="app-error">
-                <div className="error-content">
-                    <h2>Connection Error</h2>
-                    <p>{gameState.error}</p>
-                    <button onClick={() => window.location.reload()}>
-                        Retry
-                    </button>
+            <>
+                <div className="app-error">
+                    <div className="error-content">
+                        <h2>Connection Error</h2>
+                        <p>{gameState.error}</p>
+                        <button onClick={() => window.location.reload()}>
+                            Retry
+                        </button>
+                    </div>
                 </div>
-            </div>
+                <Footer />
+            </>
         );
     }
 
     // Main game flow
     if (!gameState.currentGame) {
         return (
-            <div className="app">
-                {isJoinMode ? (
-                    // Show only Join a Game card when coming from join link
-                    <WaitingRoom gameState={gameState} joinGameId={joinGameId} />
-                ) : (
-                    // Show both cards for normal visits
-                    <>
-                        <GameLobby gameState={gameState} />
-                        <WaitingRoom gameState={gameState} />
-                    </>
-                )}
-            </div>
+            <>
+                <div className="app">
+                    {isJoinMode ? (
+                        // Show only Join a Game card when coming from join link
+                        <WaitingRoom gameState={gameState} joinGameId={joinGameId} />
+                    ) : (
+                        // Show both cards for normal visits
+                        <>
+                            <GameLobby gameState={gameState} />
+                            <WaitingRoom gameState={gameState} />
+                        </>
+                    )}
+                </div>
+                <Footer />
+            </>
         );
     }
 
     // Game is waiting for players
     if (gameState.currentGame.state === GameState.WaitingForPlayers) {
         return (
-            <div className="app">
-                <WaitingRoom gameState={gameState} />
-            </div>
+            <>
+                <div className="app">
+                    <WaitingRoom gameState={gameState} />
+                </div>
+                <Footer />
+            </>
         );
     }
 
     // Game is in progress or finished
     return (
-        <div className="app">
-            <div className="game-container">
-                <div className="game-header">
-                    <h1>🎮 <span>Tic Tac Toe</span></h1>
-                    <div className="players-info">
-                        <div className="player-info">
-                            <span className="player-name">{gameState.currentGame?.player1?.name}</span>
-                            <span className="player-symbol">
-                                {gameState.currentGame?.player1?.characterIcon && (
-                                    <img
-                                        src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player1?.characterIcon)?.fileName}`}
-                                        alt={CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player1?.characterIcon)?.displayName}
-                                        className="player-character-icon"
-                                    />
-                                )}
-                            </span>
-                        </div>
-                        <div className="vs">VS</div>
-                        <div className="player-info">
-                            <span className="player-name">{gameState.currentGame?.player2?.name}</span>
-                            <span className="player-symbol">
-                                {gameState.currentGame?.player2?.characterIcon && (
-                                    <img
-                                        src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player2?.characterIcon)?.fileName}`}
-                                        alt={CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player2?.characterIcon)?.displayName}
-                                        className="player-character-icon"
-                                    />
-                                )}
-                            </span>
+        <>
+            <div className="app">
+                <div className="game-container">
+                    <div className="game-header">
+                        <h1>🎮 <span>Tic Tac Toe</span></h1>
+                        <div className="players-info">
+                            <div className="player-info">
+                                <span className="player-name">{gameState.currentGame?.player1?.name}</span>
+                                <span className="player-symbol">
+                                    {gameState.currentGame?.player1?.characterIcon && (
+                                        <img
+                                            src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player1?.characterIcon)?.fileName}`}
+                                            alt={CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player1?.characterIcon)?.displayName}
+                                            className="player-character-icon"
+                                        />
+                                    )}
+                                </span>
+                            </div>
+                            <div className="vs">VS</div>
+                            <div className="player-info">
+                                <span className="player-name">{gameState.currentGame?.player2?.name}</span>
+                                <span className="player-symbol">
+                                    {gameState.currentGame?.player2?.characterIcon && (
+                                        <img
+                                            src={`/game_icons/${CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player2?.characterIcon)?.fileName}`}
+                                            alt={CHARACTER_ICONS.find(c => c.icon === gameState.currentGame?.player2?.characterIcon)?.displayName}
+                                            className="player-character-icon"
+                                        />
+                                    )}
+                                </span>
+                            </div>
                         </div>
                     </div>
+                    
+                    <GameBoard gameState={gameState} />
+                    
                 </div>
                 
-                <GameBoard gameState={gameState} />
-                
+                {gameState.isGameFinished && (
+                    <GameResult gameState={gameState} />
+                )}
             </div>
-            
-            {gameState.isGameFinished && (
-                <GameResult gameState={gameState} />
-            )}
-        </div>
+            <Footer />
+        </>
     );
 }
 

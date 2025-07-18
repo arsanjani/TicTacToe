@@ -12,7 +12,7 @@ using TicTacToe.Server.Data;
 namespace TicTacToe.Server.Migrations
 {
     [DbContext(typeof(TicTacToeDbContext))]
-    [Migration("20250718181827_InitialCreate")]
+    [Migration("20250718220136_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
