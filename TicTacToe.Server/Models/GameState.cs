@@ -4,7 +4,8 @@ public enum GameState
 {
     WaitingForPlayers,
     InProgress,
-    Finished
+    Finished,
+    Abandoned
 }
 
 public enum CellState

@@ -12,7 +12,7 @@ using TicTacToe.Server.Data;
 namespace TicTacToe.Server.Migrations
 {
     [DbContext(typeof(TicTacToeDbContext))]
-    [Migration("20250718155300_InitialCreate")]
+    [Migration("20250718181827_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -111,8 +111,7 @@ namespace TicTacToe.Server.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.HasIndex("GameId")
-                        .IsUnique();
+                    b.HasIndex("GameId");
 
                     b.HasIndex("Player1Id");
 

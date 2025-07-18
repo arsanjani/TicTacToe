@@ -48,8 +48,7 @@ namespace TicTacToe.Server.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Games_GameId",
                 table: "Games",
-                column: "GameId",
-                unique: true);
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Games_Player1Id",

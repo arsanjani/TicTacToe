@@ -108,8 +108,7 @@ namespace TicTacToe.Server.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.HasIndex("GameId")
-                        .IsUnique();
+                    b.HasIndex("GameId");
 
                     b.HasIndex("Player1Id");
 

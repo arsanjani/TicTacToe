@@ -32,6 +32,17 @@ public class GameService : IGameService
     }
 
     /// <summary>
+    /// Helper method to get the most recent game entity by gameId (ordered by Id descending)
+    /// </summary>
+    private async Task<GameEntity?> GetMostRecentGameEntityAsync(TicTacToeDbContext context, string gameId)
+    {
+        return await context.Games
+            .Where(g => g.GameId == gameId)
+            .OrderByDescending(g => g.Id)
+            .FirstOrDefaultAsync();
+    }
+
+    /// <summary>
     /// Randomly selects the first player between Player1 and Player2 to ensure fairness
     /// </summary>
     /// <param name="game">The game instance</param>
@@ -148,7 +159,7 @@ public class GameService : IGameService
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
-            var gameEntity = await context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+            var gameEntity = await GetMostRecentGameEntityAsync(context, gameId);
             if (gameEntity != null)
             {
                 gameEntity.Player2Id = game.Player2.Id;
@@ -217,7 +228,7 @@ public class GameService : IGameService
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
-                var gameEntity = await context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+                var gameEntity = await GetMostRecentGameEntityAsync(context, gameId);
                 if (gameEntity != null)
                 {
                     gameEntity.State = game.State;
@@ -272,7 +283,28 @@ public class GameService : IGameService
             game.EndedAt = DateTime.UtcNow;
         }
 
-        return await Task.FromResult(true);
+        try
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
+            var gameEntity = await GetMostRecentGameEntityAsync(context, gameId);
+            if (gameEntity != null)
+            {
+                gameEntity.State = GameState.Abandoned;
+                gameEntity.EndedAt = DateTime.UtcNow;
+                gameEntity.Duration = gameEntity.StartedAt.HasValue ?
+                                     DateTime.UtcNow - gameEntity.StartedAt.Value : null;
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't fail the in-memory operation
+            Console.WriteLine($"Failed to update abandoned game in database: {ex.Message}");
+        }
+
+        return true;
     }
 
     public async Task<List<Game>> GetWaitingGamesAsync()
@@ -300,6 +332,24 @@ public class GameService : IGameService
         game.MoveCount = 0;
         game.StartedAt = DateTime.UtcNow;
         game.EndedAt = null;
+
+        // Insert new database record for the reset game (play again)
+        try
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
+            var newGameEntity = ConvertToEntity(game);
+            // Reset CreatedAt to current time for the new game record
+            newGameEntity.CreatedAt = DateTime.UtcNow;
+            
+            context.Games.Add(newGameEntity);
+            await context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't fail the in-memory operation
+            Console.WriteLine($"Failed to insert reset game record to database: {ex.Message}");
+        }
 
         return await Task.FromResult(true);
     }

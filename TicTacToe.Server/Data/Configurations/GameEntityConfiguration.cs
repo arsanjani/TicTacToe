@@ -19,9 +19,6 @@ public class GameEntityConfiguration : IEntityTypeConfiguration<GameEntity>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.HasIndex(e => e.GameId)
-            .IsUnique();
-
         builder.Property(e => e.Player1Id)
             .IsRequired()
             .HasMaxLength(100);
