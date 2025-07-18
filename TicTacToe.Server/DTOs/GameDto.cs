@@ -2,9 +2,8 @@ using TicTacToe.Server.Models;
 
 namespace TicTacToe.Server.DTOs;
 
-public class GameDto
+public class GameDto : BaseDto
 {
-    public int Id { get; set; }
     public string GameId { get; set; } = string.Empty;
     public string Player1Id { get; set; } = string.Empty;
     public string Player1Name { get; set; } = string.Empty;
@@ -22,8 +21,4 @@ public class GameDto
     public DateTime? EndedAt { get; set; }
     public int TotalMoves { get; set; }
     public TimeSpan? Duration { get; set; }
-    public string BoardState { get; set; } = string.Empty;
-    public string? CurrentPlayerId { get; set; }
-    public DateTime UpdatedAt { get; set; }
-    public string? Notes { get; set; }
 } 

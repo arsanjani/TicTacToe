@@ -8,38 +8,9 @@ using TicTacToe.Server.Entities;
 namespace TicTacToe.Server.Controllers;
 
 [Route("api/[controller]")]
-public class GamesController : BaseApiController<GameEntity, GameDto>
+public class GamesController(TicTacToeDbContext context, IMapper mapper) : BaseApiController<GameEntity, GameDto>(context, mapper)
 {
-    public GamesController(TicTacToeDbContext context, IMapper mapper) : base(context, mapper)
-    {
-    }
-
-    protected override object GetEntityId(GameEntity entity)
-    {
-        return entity.Id;
-    }
-
-    protected override void SetCreatedAt(GameEntity entity)
-    {
-        entity.CreatedAt = DateTime.UtcNow;
-        entity.UpdatedAt = DateTime.UtcNow;
-        
-        // Set default values for new games
-        if (entity.State == default)
-            entity.State = Models.GameState.WaitingForPlayers;
-            
-        if (entity.Result == default)
-            entity.Result = Models.GameResult.None;
-            
-        if (string.IsNullOrEmpty(entity.BoardState))
-            entity.BoardState = string.Empty;
-    }
-
-    protected override void SetUpdatedAt(GameEntity entity)
-    {
-        entity.UpdatedAt = DateTime.UtcNow;
-    }
-
+    
     /// <summary>
     /// Get game by GameId (string identifier)
     /// </summary>

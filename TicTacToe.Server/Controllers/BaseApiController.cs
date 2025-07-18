@@ -2,14 +2,16 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.Server.Data;
+using TicTacToe.Server.Entities;
+using TicTacToe.Server.DTOs;
 
 namespace TicTacToe.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public abstract class BaseApiController<TEntity, TDto> : ControllerBase
-    where TEntity : class
-    where TDto : class
+    where TEntity : BaseEntity
+    where TDto : BaseDto
 {
     protected readonly TicTacToeDbContext _context;
     protected readonly IMapper _mapper;
@@ -174,7 +176,7 @@ public abstract class BaseApiController<TEntity, TDto> : ControllerBase
     /// <summary>
     /// Override this method to return the ID of the entity
     /// </summary>
-    protected abstract object GetEntityId(TEntity entity);
+    protected virtual int GetEntityId(TEntity entity) => entity.Id;
 
     /// <summary>
     /// Override this method to set CreatedAt timestamp for new entities

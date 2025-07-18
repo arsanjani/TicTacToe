@@ -67,25 +67,12 @@ public class GameEntityConfiguration : IEntityTypeConfiguration<GameEntity>
             .IsRequired()
             .HasDefaultValueSql("GETUTCDATE()");
 
-        builder.Property(e => e.UpdatedAt)
-            .IsRequired()
-            .HasDefaultValueSql("GETUTCDATE()");
-
         builder.Property(e => e.TotalMoves)
             .IsRequired()
             .HasDefaultValue(0);
 
-        builder.Property(e => e.BoardState)
-            .HasColumnType("nvarchar(max)")
-            .HasDefaultValue(string.Empty);
-
-        builder.Property(e => e.CurrentPlayerId)
-            .HasMaxLength(100);
-
-        builder.Property(e => e.Notes)
-            .HasMaxLength(500);
-
         // Indexes for better performance
+        builder.HasIndex(e => e.GameId);
         builder.HasIndex(e => e.State);
         builder.HasIndex(e => e.CreatedAt);
         builder.HasIndex(e => e.Player1Id);

@@ -33,11 +33,7 @@ namespace TicTacToe.Server.Migrations
                     StartedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TotalMoves = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
-                    BoardState = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: ""),
-                    CurrentPlayerId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {

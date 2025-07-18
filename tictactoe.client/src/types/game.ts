@@ -130,4 +130,7 @@ export const CHARACTER_ICONS: CharacterIconInfo[] = [
   { icon: CharacterIcon.HelloKitty, displayName: 'Hello Kitty', fileName: 'icons8-hello-kitty-100.png' },
   { icon: CharacterIcon.Keroppi, displayName: 'Keroppi', fileName: 'icons8-keroppi-100.png' },
   { icon: CharacterIcon.Pochacco, displayName: 'Pochacco', fileName: 'icons8-pochacco-100.png' }
-]; 
+];
+
+// Re-export GameDto types for convenience
+export type { GameDto, BaseDto, CreateGameRequest, UpdateGameRequest } from './gameDto'; 

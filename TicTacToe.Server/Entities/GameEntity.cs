@@ -5,12 +5,8 @@ using TicTacToe.Server.Models;
 namespace TicTacToe.Server.Entities;
 
 [Table("Games")]
-public class GameEntity
+public class GameEntity : BaseEntity
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
     [Required]
     [StringLength(50)]
     public string GameId { get; set; } = string.Empty;
@@ -61,17 +57,4 @@ public class GameEntity
 
     [Required]
     public TimeSpan? Duration { get; set; }
-
-    [Column(TypeName = "nvarchar(max)")]
-    public string BoardState { get; set; } = string.Empty;
-
-    [StringLength(100)]
-    public string? CurrentPlayerId { get; set; }
-
-    // Additional tracking fields
-    [Required]
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
-    [StringLength(500)]
-    public string? Notes { get; set; }
 } 

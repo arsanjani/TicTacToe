@@ -13,7 +13,6 @@ public class GameMappingProfile : Profile
 
         // DTO to Entity mappings
         CreateMap<GameDto, GameEntity>()
-            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.Id, opt => opt.Condition(src => src.Id > 0)); // Only map Id if it's greater than 0 (for updates)
     }
 } 
