@@ -8,7 +8,8 @@ export const CharacterIcon = {
   BadtzMaru: 'BadtzMaru',
   HelloKitty: 'HelloKitty',
   Keroppi: 'Keroppi',
-  Pochacco: 'Pochacco'
+  Pochacco: 'Pochacco',
+  AI: 'AI'
 } as const;
 
 export type CharacterIcon = typeof CharacterIcon[keyof typeof CharacterIcon];
@@ -129,7 +130,8 @@ export const CHARACTER_ICONS: CharacterIconInfo[] = [
   { icon: CharacterIcon.BadtzMaru, displayName: 'Badtz-Maru', fileName: 'icons8-badtz-maru-100.png' },
   { icon: CharacterIcon.HelloKitty, displayName: 'Hello Kitty', fileName: 'icons8-hello-kitty-100.png' },
   { icon: CharacterIcon.Keroppi, displayName: 'Keroppi', fileName: 'icons8-keroppi-100.png' },
-  { icon: CharacterIcon.Pochacco, displayName: 'Pochacco', fileName: 'icons8-pochacco-100.png' }
+  { icon: CharacterIcon.Pochacco, displayName: 'Pochacco', fileName: 'icons8-pochacco-100.png' },
+  { icon: CharacterIcon.AI, displayName: 'AI', fileName: 'icons8-ai-100.png' }
 ];
 
 // Re-export GameDto types for convenience

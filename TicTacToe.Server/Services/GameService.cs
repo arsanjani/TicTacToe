@@ -9,11 +9,12 @@ namespace TicTacToe.Server.Services;
 
 public interface IGameService
 {
-    Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false);
+    Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false, bool playWithAI = false);
     Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName, CharacterIcon characterIcon);
     Task<Game?> GetGameAsync(string gameId);
     Task<Game?> GetGameByPlayerAsync(string playerId);
     Task<bool> MakeMoveAsync(string gameId, string playerId, int row, int col);
+    Task<(bool success, int row, int col)> MakeAIMoveAsync(string gameId);
     Task<bool> RemovePlayerAsync(string playerId);
     Task<List<Game>> GetWaitingGamesAsync();
     Task<bool> ResetGameAsync(string gameId);
@@ -86,7 +87,7 @@ public class GameService : IGameService
         };
     }
 
-    public async Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false)
+    public async Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false, bool playWithAI = false)
     {
         var game = new Game
         {
@@ -102,6 +103,23 @@ public class GameService : IGameService
             State = GameState.WaitingForPlayers,
             IsPrivate = isPrivate
         };
+
+        // If playing with AI, automatically add AI as player2 and start the game
+        if (playWithAI)
+        {
+            game.Player2 = new Player
+            {
+                Id = "AI_PLAYER",
+                ConnectionId = "AI_CONNECTION",
+                Name = "AI",
+                CharacterIcon = CharacterIcon.AI,
+                IsReady = true
+            };
+            
+            game.State = GameState.InProgress;
+            game.CurrentPlayer = SelectRandomFirstPlayer(game); // Randomly select first player for fairness
+            game.StartedAt = DateTime.UtcNow;
+        }
 
         _games[game.Id] = game;
         _playerToGame[playerId] = game.Id;
@@ -352,5 +370,150 @@ public class GameService : IGameService
         }
 
         return await Task.FromResult(true);
+    }
+
+    /// <summary>
+    /// Makes an AI move for the current AI player
+    /// </summary>
+    public async Task<(bool success, int row, int col)> MakeAIMoveAsync(string gameId)
+    {
+        if (!_games.TryGetValue(gameId, out var game))
+            return (false, -1, -1);
+
+        if (game.State != GameState.InProgress)
+            return (false, -1, -1);
+
+        if (game.CurrentPlayer?.Id != "AI_PLAYER")
+            return (false, -1, -1);
+
+        // Simple AI logic: try to win, then block, then take center, then take corners, then take edges
+        var (row, col) = GetBestAIMove(game);
+        
+        if (row == -1 || col == -1)
+            return (false, -1, -1);
+
+        // Make the move
+        var success = await MakeMoveAsync(gameId, "AI_PLAYER", row, col);
+        return (success, row, col);
+    }
+
+    /// <summary>
+    /// Simple AI strategy for tic-tac-toe
+    /// </summary>
+    private (int row, int col) GetBestAIMove(Game game)
+    {
+        var aiCellState = GetPlayerCellState(game.Player2);
+        var humanCellState = GetPlayerCellState(game.Player1);
+
+        // 1. Try to win
+        var winMove = FindWinningMove(game.Board, aiCellState);
+        if (winMove.row != -1) return winMove;
+
+        // 2. Block opponent from winning
+        var blockMove = FindWinningMove(game.Board, humanCellState);
+        if (blockMove.row != -1) return blockMove;
+
+        // 3. Take center if available
+        if (game.Board[1, 1] == CellState.Empty)
+            return (1, 1);
+
+        // 4. Take corners
+        var corners = new[] { (0, 0), (0, 2), (2, 0), (2, 2) };
+        foreach (var (r, c) in corners)
+        {
+            if (game.Board[r, c] == CellState.Empty)
+                return (r, c);
+        }
+
+        // 5. Take edges
+        var edges = new[] { (0, 1), (1, 0), (1, 2), (2, 1) };
+        foreach (var (r, c) in edges)
+        {
+            if (game.Board[r, c] == CellState.Empty)
+                return (r, c);
+        }
+
+        return (-1, -1); // No move available
+    }
+
+    /// <summary>
+    /// Find a winning move for the given player
+    /// </summary>
+    private (int row, int col) FindWinningMove(CellState[,] board, CellState playerCellState)
+    {
+        for (int row = 0; row < 3; row++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                if (board[row, col] == CellState.Empty)
+                {
+                    // Try this move
+                    board[row, col] = playerCellState;
+                    
+                    // Check if this creates a win
+                    bool isWin = CheckWinCondition(board, playerCellState);
+                    
+                    // Undo the move
+                    board[row, col] = CellState.Empty;
+                    
+                    if (isWin)
+                        return (row, col);
+                }
+            }
+        }
+        return (-1, -1);
+    }
+
+    /// <summary>
+    /// Check if the given player has won
+    /// </summary>
+    private bool CheckWinCondition(CellState[,] board, CellState playerCellState)
+    {
+        // Check rows
+        for (int row = 0; row < 3; row++)
+        {
+            if (board[row, 0] == playerCellState && board[row, 1] == playerCellState && board[row, 2] == playerCellState)
+                return true;
+        }
+
+        // Check columns
+        for (int col = 0; col < 3; col++)
+        {
+            if (board[0, col] == playerCellState && board[1, col] == playerCellState && board[2, col] == playerCellState)
+                return true;
+        }
+
+        // Check diagonals
+        if (board[0, 0] == playerCellState && board[1, 1] == playerCellState && board[2, 2] == playerCellState)
+            return true;
+
+        if (board[0, 2] == playerCellState && board[1, 1] == playerCellState && board[2, 0] == playerCellState)
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Get the cell state for a player
+    /// </summary>
+    private CellState GetPlayerCellState(Player? player)
+    {
+        if (player == null) return CellState.Empty;
+        
+        return player.CharacterIcon switch
+        {
+            CharacterIcon.Cross => CellState.Cross,
+            CharacterIcon.Circle => CellState.Circle,
+            CharacterIcon.Kuromi => CellState.Kuromi,
+            CharacterIcon.MyMelody => CellState.MyMelody,
+            CharacterIcon.Spiderman => CellState.Spiderman,
+            CharacterIcon.Cinnamoroll => CellState.Cinnamoroll,
+            CharacterIcon.BadtzMaru => CellState.BadtzMaru,
+            CharacterIcon.HelloKitty => CellState.HelloKitty,
+            CharacterIcon.Keroppi => CellState.Keroppi,
+            CharacterIcon.Pochacco => CellState.Pochacco,
+            CharacterIcon.AI => CellState.AI,
+            _ => CellState.Empty
+        };
     }
 } 

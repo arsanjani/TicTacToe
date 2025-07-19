@@ -44,6 +44,7 @@ public class Game
             CharacterIcon.HelloKitty => CellState.HelloKitty,
             CharacterIcon.Keroppi => CellState.Keroppi,
             CharacterIcon.Pochacco => CellState.Pochacco,
+            CharacterIcon.AI => CellState.AI,
             _ => CellState.Cross
         };
     }

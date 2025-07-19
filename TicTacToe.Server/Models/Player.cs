@@ -11,7 +11,8 @@ public enum CharacterIcon
     BadtzMaru,       // icons8-badtz-maru-100.png
     HelloKitty,      // icons8-hello-kitty-100.png
     Keroppi,         // icons8-keroppi-100.png
-    Pochacco         // icons8-pochacco-100.png
+    Pochacco,        // icons8-pochacco-100.png
+    AI               // icons8-ai-100.png
 }
 
 public class Player
