@@ -22,21 +22,21 @@ jobs:
       with:
         dotnet-version: '9.0.x'  # adjust to your .NET version
 
-    - name: Setup Node.js
+    - name: Enable Corepack (for Yarn)
+      run: corepack enable
+
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '23.7.0' # or whatever your project uses
+        node-version: 20
+        cache: 'yarn'
 
     - name: Install compatible @types/node version
-      run: npm install @types/node@24.0.13 --save-dev
+      run: yarn add -D @types/node@20.11.0  
 
     - name: Install Front-End Dependencies
       working-directory: tictactoe.client  # adjust to your actual client path
-      run: npm install
-
-    - name: Build Front-End
-      working-directory: tictactoe.client
-      run: npm run build  # or tsc -b && vite build if custom
+      run: yarn install
 
     - name: Publish .NET App
       run: dotnet publish ./TicTacToe.Server/TicTacToe.Server.csproj -c Release -o published
