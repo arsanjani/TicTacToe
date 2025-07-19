@@ -558,3 +558,4 @@ staticwebassets.build.json
 staticwebassets.development.json
 *.staticwebassets.endpoints.json 
 /TicTacToe.Server/appsettings.Production.json
+/TicTacToe.Server/Properties/PublishProfiles/
