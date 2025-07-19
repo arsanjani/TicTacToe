@@ -1,0 +1,50 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Deploy to Somee via FTP
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+    
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'  # adjust to your .NET version
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '23.7.0' # or whatever your project uses
+
+    - name: Install Front-End Dependencies
+      working-directory: tictactoe.client  # adjust to your actual client path
+      run: npm install
+
+    - name: Build Front-End
+      working-directory: tictactoe.client
+      run: npm run build  # or tsc -b && vite build if custom
+
+    - name: Publish .NET App
+      run: dotnet publish ./TicTacToe.Server/TicTacToe.Server.csproj -c Release -o published
+
+    - name: Upload via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftp
+        port: 21
+        local-dir: ./published/
+        server-dir: /www.tictactoe.somee.com/
