@@ -30,11 +30,11 @@ namespace TicTacToe.Server.app_Start
         static void ConfigureLogging(WebHostBuilderContext context, ILoggingBuilder logging)
         {
             // You can customise logging here
-            if (context.HostingEnvironment.IsDevelopment())
-            {
-                // Configure logging for development
-                logging.SetMinimumLevel(LogLevel.Information);
-            }
+            // if (context.HostingEnvironment.IsDevelopment())
+            // {
+            //     // Configure logging for development
+            //     logging.SetMinimumLevel(LogLevel.Information);
+            // }
         }
     }
 } 

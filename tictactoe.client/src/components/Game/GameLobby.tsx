@@ -13,13 +13,14 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterIcon>(CharacterIcon.Cross);
   const [isCreating, setIsCreating] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [playWithAI, setPlayWithAI] = useState(false);
 
   const handleCreateGame = async () => {
     if (!playerName.trim()) return;
     
     setIsCreating(true);
     try {
-      await createGame(playerName.trim(), selectedCharacter, isPrivate);
+      await createGame(playerName.trim(), selectedCharacter, isPrivate, playWithAI);
     } finally {
       setIsCreating(false);
     }
@@ -71,14 +72,14 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
             </div>
             
             <div className="lobby-input-group">
-              <label htmlFor="privateSwitch" className="lobby-switch-label">
-                <span>Private Game</span>
+              <label htmlFor="aiSwitch" className="lobby-switch-label">
+                <span>Play with AI</span>
                 <div className="lobby-switch-container">
                   <input
-                    id="privateSwitch"
+                    id="aiSwitch"
                     type="checkbox"
-                    checked={isPrivate}
-                    onChange={(e) => setIsPrivate(e.target.checked)}
+                    checked={playWithAI}
+                    onChange={(e) => setPlayWithAI(e.target.checked)}
                     className="lobby-switch-input"
                     disabled={!isConnected}
                   />
@@ -86,9 +87,31 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
                 </div>
               </label>
               <p className="lobby-switch-description">
-                {isPrivate ? 'Only accessible via share link' : 'Visible in public game list'}
+                {playWithAI ? 'Start game immediately against AI opponent' : 'Wait for another player to join'}
               </p>
             </div>
+            
+            {!playWithAI && (
+              <div className="lobby-input-group">
+                <label htmlFor="privateSwitch" className="lobby-switch-label">
+                  <span>Private Game</span>
+                  <div className="lobby-switch-container">
+                    <input
+                      id="privateSwitch"
+                      type="checkbox"
+                      checked={isPrivate}
+                      onChange={(e) => setIsPrivate(e.target.checked)}
+                      className="lobby-switch-input"
+                      disabled={!isConnected}
+                    />
+                    <div className="lobby-switch-slider"></div>
+                  </div>
+                </label>
+                <p className="lobby-switch-description">
+                  {isPrivate ? 'Only accessible via share link' : 'Visible in public game list'}
+                </p>
+              </div>
+            )}
             
             <button
               onClick={handleCreateGame}

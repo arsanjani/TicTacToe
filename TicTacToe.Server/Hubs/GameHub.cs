@@ -8,11 +8,14 @@ public class GameHub : Hub
 {
     private readonly IGameService _gameService;
     private readonly ILogger<GameHub> _logger;
+    // Use a hub context so that we can safely broadcast to clients from background threads
+    private readonly IHubContext<GameHub> _hubContext;
 
-    public GameHub(IGameService gameService, ILogger<GameHub> logger)
+    public GameHub(IGameService gameService, ILogger<GameHub> logger, IHubContext<GameHub> hubContext)
     {
         _gameService = gameService;
         _logger = logger;
+        _hubContext = hubContext;
     }
 
     private string CellStateToCharacterIcon(CellState cellState, Game game)
@@ -35,6 +38,7 @@ public class GameHub : Hub
             CharacterIcon.HelloKitty => CellState.HelloKitty,
             CharacterIcon.Keroppi => CellState.Keroppi,
             CharacterIcon.Pochacco => CellState.Pochacco,
+            CharacterIcon.AI => CellState.AI,
             _ => CellState.Cross
         };
         
@@ -50,6 +54,7 @@ public class GameHub : Hub
             CharacterIcon.HelloKitty => CellState.HelloKitty,
             CharacterIcon.Keroppi => CellState.Keroppi,
             CharacterIcon.Pochacco => CellState.Pochacco,
+            CharacterIcon.AI => CellState.AI,
             _ => CellState.Circle
         };
         
@@ -67,7 +72,7 @@ public class GameHub : Hub
         }
     }
 
-    public async Task CreateGame(string playerName, string characterIcon, bool isPrivate = false)
+    public async Task CreateGame(string playerName, string characterIcon, bool isPrivate = false, bool playWithAI = false)
     {
         try
         {
@@ -80,23 +85,98 @@ public class GameHub : Hub
                 return;
             }
 
-            var game = await _gameService.CreateGameAsync(playerId, playerName, parsedIcon, isPrivate);
+            var game = await _gameService.CreateGameAsync(playerId, playerName, parsedIcon, isPrivate, playWithAI);
             
             // Join the game room
             await Groups.AddToGroupAsync(Context.ConnectionId, game.Id);
-            
-            // Notify the player about the created game
-            await Clients.Caller.SendAsync("GameCreated", new
-            {
-                GameId = game.Id,
-                PlayerId = playerId,
-                PlayerName = playerName,
-                CharacterIcon = game.Player1?.CharacterIcon.ToString(),
-                State = game.State.ToString(),
-                IsPrivate = game.IsPrivate
-            });
 
-            _logger.LogInformation($"Game {game.Id} created by player {playerName} with character {parsedIcon} (Private: {isPrivate})");
+            if (playWithAI && game.State == GameState.InProgress)
+            {
+                // AI game started immediately, notify about game start
+                await Clients.Caller.SendAsync("GameStarted", new
+                {
+                    GameId = game.Id,
+                    Player1 = new
+                    {
+                        Id = game.Player1?.Id,
+                        Name = game.Player1?.Name,
+                        CharacterIcon = game.Player1?.CharacterIcon.ToString()
+                    },
+                    Player2 = new
+                    {
+                        Id = game.Player2?.Id,
+                        Name = game.Player2?.Name,
+                        CharacterIcon = game.Player2?.CharacterIcon.ToString()
+                    },
+                    CurrentPlayer = new
+                    {
+                        Id = game.CurrentPlayer?.Id,
+                        Name = game.CurrentPlayer?.Name,
+                        CharacterIcon = game.CurrentPlayer?.CharacterIcon.ToString()
+                    },
+                    State = game.State.ToString()
+                });
+
+                _logger.LogInformation($"AI game {game.Id} started immediately with player {playerName}");
+
+                // If AI was selected to go first, make the first AI move after a short delay
+                if (game.CurrentPlayer?.Id == "AI_PLAYER")
+                {
+
+                    await Task.Delay(1500); // 1.5 second delay for first AI move
+
+                    var (aiSuccess, aiRow, aiCol) = await _gameService.MakeAIMoveAsync(game.Id);
+                    if (aiSuccess)
+                    {
+                        var updatedGame = await _gameService.GetGameAsync(game.Id);
+                        if (updatedGame != null)
+                        {
+                            // Create updated board representation
+                            var updatedBoardForClient = new string[3][];
+                            for (int i = 0; i < 3; i++)
+                            {
+                                updatedBoardForClient[i] = new string[3];
+                                for (int j = 0; j < 3; j++)
+                                {
+                                    updatedBoardForClient[i][j] = CellStateToCharacterIcon(updatedGame.Board[i, j], updatedGame);
+                                }
+                            }
+
+                            // Notify about AI's first move
+                            await _hubContext.Clients.Group(game.Id).SendAsync("MoveMade", new
+                            {
+                                GameId = game.Id,
+                                Row = aiRow,
+                                Col = aiCol,
+                                PlayerId = "AI_PLAYER",
+                                Board = updatedBoardForClient,
+                                CurrentPlayer = updatedGame.CurrentPlayer != null ? new
+                                {
+                                    Id = updatedGame.CurrentPlayer.Id,
+                                    Name = updatedGame.CurrentPlayer.Name,
+                                    CharacterIcon = updatedGame.CurrentPlayer.CharacterIcon.ToString()
+                                } : null,
+                                MoveCount = updatedGame.MoveCount
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Normal game creation, waiting for players
+                await Clients.Caller.SendAsync("GameCreated", new
+                {
+                    GameId = game.Id,
+                    PlayerId = playerId,
+                    PlayerName = playerName,
+                    CharacterIcon = game.Player1?.CharacterIcon.ToString(),
+                    State = game.State.ToString(),
+                    IsPrivate = game.IsPrivate
+                });
+                
+                _logger.LogInformation($"Game {game.Id} created by player {playerName} with character {parsedIcon} (Private: {isPrivate})");
+            }
         }
         catch (Exception ex)
         {
@@ -207,6 +287,63 @@ public class GameHub : Hub
                 MoveCount = game.MoveCount
             });
 
+            // If it's now AI's turn and game is still in progress, make AI move after a short delay
+            if (game.State == GameState.InProgress && game.CurrentPlayer?.Id == "AI_PLAYER")
+            {
+
+                await Task.Delay(1000); // 1 second delay to make AI move visible
+
+                var (aiSuccess, aiRow, aiCol) = await _gameService.MakeAIMoveAsync(gameId);
+                if (aiSuccess)
+                {
+                    var updatedGame = await _gameService.GetGameAsync(gameId);
+                    if (updatedGame != null)
+                    {
+                        // Create updated board representation
+                        var updatedBoardForClient = new string[3][];
+                        for (int i = 0; i < 3; i++)
+                        {
+                            updatedBoardForClient[i] = new string[3];
+                            for (int j = 0; j < 3; j++)
+                            {
+                                updatedBoardForClient[i][j] = CellStateToCharacterIcon(updatedGame.Board[i, j], updatedGame);
+                            }
+                        }
+
+                        // Notify about AI move
+                        await _hubContext.Clients.Group(gameId).SendAsync("MoveMade", new
+                        {
+                            GameId = gameId,
+                            Row = aiRow,
+                            Col = aiCol,
+                            PlayerId = "AI_PLAYER",
+                            Board = updatedBoardForClient,
+                            CurrentPlayer = updatedGame.CurrentPlayer != null ? new
+                            {
+                                Id = updatedGame.CurrentPlayer.Id,
+                                Name = updatedGame.CurrentPlayer.Name,
+                                CharacterIcon = updatedGame.CurrentPlayer.CharacterIcon.ToString()
+                            } : null,
+                            MoveCount = updatedGame.MoveCount
+                        });
+
+                        // Check if AI move finished the game
+                        if (updatedGame.State == GameState.Finished)
+                        {
+                            await _hubContext.Clients.Group(gameId).SendAsync("GameFinished", new
+                            {
+                                GameId = gameId,
+                                Result = updatedGame.Result.ToString(),
+                                Winner = updatedGame.Result == GameResult.Player1Wins ? updatedGame.Player1?.Name :
+                                        updatedGame.Result == GameResult.Player2Wins ? updatedGame.Player2?.Name : null,
+                                EndedAt = updatedGame.EndedAt
+                            });
+                        }
+                    }
+                }
+
+            }
+
             // Check if game is finished
             if (game.State == GameState.Finished)
             {
@@ -290,6 +427,61 @@ public class GameHub : Hub
                 },
                 State = game.State.ToString()
             });
+
+            // If the AI is set to make the first move after a reset, trigger it after a short delay
+            if (game.State == GameState.InProgress && game.CurrentPlayer?.Id == "AI_PLAYER")
+            {
+                // small delay so the UI shows the reset state first
+                await Task.Delay(1000);
+
+                var (aiSuccess, aiRow, aiCol) = await _gameService.MakeAIMoveAsync(gameId);
+                if (aiSuccess)
+                {
+                    var updatedGame = await _gameService.GetGameAsync(gameId);
+                    if (updatedGame != null)
+                    {
+                        // Prepare board for client
+                        var updatedBoard = new string[3][];
+                        for (int i = 0; i < 3; i++)
+                        {
+                            updatedBoard[i] = new string[3];
+                            for (int j = 0; j < 3; j++)
+                            {
+                                updatedBoard[i][j] = CellStateToCharacterIcon(updatedGame.Board[i, j], updatedGame);
+                            }
+                        }
+
+                        await _hubContext.Clients.Group(gameId).SendAsync("MoveMade", new
+                        {
+                            GameId = gameId,
+                            Row = aiRow,
+                            Col = aiCol,
+                            PlayerId = "AI_PLAYER",
+                            Board = updatedBoard,
+                            CurrentPlayer = updatedGame.CurrentPlayer != null ? new
+                            {
+                                Id = updatedGame.CurrentPlayer.Id,
+                                Name = updatedGame.CurrentPlayer.Name,
+                                CharacterIcon = updatedGame.CurrentPlayer.CharacterIcon.ToString()
+                            } : null,
+                            MoveCount = updatedGame.MoveCount
+                        });
+
+                        // If the AI's move finished the game after reset, notify
+                        if (updatedGame.State == GameState.Finished)
+                        {
+                            await _hubContext.Clients.Group(gameId).SendAsync("GameFinished", new
+                            {
+                                GameId = gameId,
+                                Result = updatedGame.Result.ToString(),
+                                Winner = updatedGame.Result == GameResult.Player1Wins ? updatedGame.Player1?.Name :
+                                         updatedGame.Result == GameResult.Player2Wins ? updatedGame.Player2?.Name : null,
+                                EndedAt = updatedGame.EndedAt
+                            });
+                        }
+                    }
+                }
+            }
         }
         catch (Exception ex)
         {

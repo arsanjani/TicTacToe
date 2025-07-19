@@ -26,7 +26,7 @@ export interface GameStateHook {
   // Game actions
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
-  createGame: (playerName: string, characterIcon: CharacterIcon, isPrivate?: boolean) => Promise<void>;
+  createGame: (playerName: string, characterIcon: CharacterIcon, isPrivate?: boolean, playWithAI?: boolean) => Promise<void>;
   joinGame: (gameId: string, playerName: string, characterIcon: CharacterIcon) => Promise<void>;
   makeMove: (row: number, col: number) => Promise<void>;
   getWaitingGames: () => Promise<void>;
@@ -212,9 +212,9 @@ export const useGameState = (): GameStateHook => {
   }, []);
 
   // Game actions
-  const createGame = useCallback(async (playerName: string, characterIcon: CharacterIcon, isPrivate: boolean = false) => {
+  const createGame = useCallback(async (playerName: string, characterIcon: CharacterIcon, isPrivate: boolean = false, playWithAI: boolean = false) => {
     try {
-      await gameService.createGame(playerName, characterIcon, isPrivate);
+      await gameService.createGame(playerName, characterIcon, isPrivate, playWithAI);
       setError(null);
     } catch (error) {
       setError(`Failed to create game: ${error}`);
