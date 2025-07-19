@@ -25,10 +25,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '23.7.0' # or whatever your project uses
-
-    - name: Install compatible @types/node version
-      run: npm install @types/node@20.11.0 --save-dev
+        node-version: '24.0.13' # or whatever your project uses
 
     - name: Install Front-End Dependencies
       working-directory: tictactoe.client  # adjust to your actual client path
