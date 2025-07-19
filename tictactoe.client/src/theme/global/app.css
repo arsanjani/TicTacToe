@@ -314,6 +314,7 @@
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .game-actions {
@@ -640,7 +641,7 @@
   }
   
   .vs {
-    transform: rotate(90deg);
+    /* transform: rotate(90deg); */
     font-size: 1.2rem;
   }
   
@@ -735,7 +736,7 @@
   }
   
   .vs {
-    transform: rotate(90deg);
+    /* transform: rotate(90deg); */
     font-size: 1rem;
   }
   
