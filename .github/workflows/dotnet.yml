@@ -27,6 +27,9 @@ jobs:
       with:
         node-version: '23.7.0' # or whatever your project uses
 
+    - name: Install compatible @types/node version
+      run: npm install @types/node@20.11.0 --save-dev
+
     - name: Install Front-End Dependencies
       working-directory: tictactoe.client  # adjust to your actual client path
       run: npm install
