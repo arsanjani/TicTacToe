@@ -24,6 +24,7 @@ namespace TicTacToe.Server.Migrations
                     Player2Id = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Player2Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Player2Character = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoardSize = table.Column<int>(type: "int", nullable: false, defaultValue: 3),
                     IsPrivate = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     State = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValue: "WaitingForPlayers"),
                     Result = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "None"),

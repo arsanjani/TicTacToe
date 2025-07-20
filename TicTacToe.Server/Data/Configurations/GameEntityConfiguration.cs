@@ -40,6 +40,10 @@ public class GameEntityConfiguration : IEntityTypeConfiguration<GameEntity>
         builder.Property(e => e.Player2Character)
             .HasConversion<string>();
 
+        builder.Property(e => e.BoardSize)
+            .IsRequired()
+            .HasDefaultValue(3);
+
         builder.Property(e => e.IsPrivate)
             .IsRequired()
             .HasDefaultValue(false);

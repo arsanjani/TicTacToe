@@ -12,7 +12,7 @@ using TicTacToe.Server.Data;
 namespace TicTacToe.Server.Migrations
 {
     [DbContext(typeof(TicTacToeDbContext))]
-    [Migration("20250718220136_InitialCreate")]
+    [Migration("20250720101029_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -32,6 +32,11 @@ namespace TicTacToe.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoardSize")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(3);
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()

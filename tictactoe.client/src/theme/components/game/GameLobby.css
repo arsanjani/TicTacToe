@@ -279,6 +279,101 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* Board Size Selection Styles */
+.lobby-board-size-selection {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lobby-board-size-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.lobby-board-size-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+.lobby-board-size-option.selected {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: #667eea;
+  color: white;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.lobby-board-size-option.selected:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+}
+
+.lobby-board-preview {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lobby-board-size-option.selected .lobby-board-preview {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.lobby-preview-grid {
+  display: grid;
+  gap: 2px;
+  width: 60px;
+  height: 60px;
+}
+
+.lobby-preview-grid.grid-3x3 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.lobby-preview-grid.grid-4x4 {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.lobby-preview-cell {
+  background: rgba(102, 126, 234, 0.2);
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+
+.lobby-board-size-option.selected .lobby-preview-cell {
+  background: rgba(75, 73, 73, 0.3);
+  transition: background-color 1.5s ease;
+}
+
+.lobby-board-size-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.lobby-board-size-option.selected .lobby-board-size-label {
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
 .lobby-switch-description {
   font-size: 0.85rem;
   color: #666;

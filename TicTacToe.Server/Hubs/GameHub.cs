@@ -72,7 +72,21 @@ public class GameHub : Hub
         }
     }
 
-    public async Task CreateGame(string playerName, string characterIcon, bool isPrivate = false, bool playWithAI = false)
+    private string[][] ConvertBoardForClient(Game game)
+    {
+        var boardForClient = new string[game.BoardSize][];
+        for (int i = 0; i < game.BoardSize; i++)
+        {
+            boardForClient[i] = new string[game.BoardSize];
+            for (int j = 0; j < game.BoardSize; j++)
+            {
+                boardForClient[i][j] = CellStateToCharacterIcon(game.Board[i, j], game);
+            }
+        }
+        return boardForClient;
+    }
+
+    public async Task CreateGame(string playerName, string characterIcon, int boardSize = 3, bool isPrivate = false, bool playWithAI = false)
     {
         try
         {
@@ -85,7 +99,7 @@ public class GameHub : Hub
                 return;
             }
 
-            var game = await _gameService.CreateGameAsync(playerId, playerName, parsedIcon, isPrivate, playWithAI);
+            var game = await _gameService.CreateGameAsync(playerId, playerName, parsedIcon, boardSize, isPrivate, playWithAI);
             
             // Join the game room
             await Groups.AddToGroupAsync(Context.ConnectionId, game.Id);
@@ -114,6 +128,7 @@ public class GameHub : Hub
                         Name = game.CurrentPlayer?.Name,
                         CharacterIcon = game.CurrentPlayer?.CharacterIcon.ToString()
                     },
+                    BoardSize = game.BoardSize,
                     State = game.State.ToString()
                 });
 
@@ -132,15 +147,7 @@ public class GameHub : Hub
                         if (updatedGame != null)
                         {
                             // Create updated board representation
-                            var updatedBoardForClient = new string[3][];
-                            for (int i = 0; i < 3; i++)
-                            {
-                                updatedBoardForClient[i] = new string[3];
-                                for (int j = 0; j < 3; j++)
-                                {
-                                    updatedBoardForClient[i][j] = CellStateToCharacterIcon(updatedGame.Board[i, j], updatedGame);
-                                }
-                            }
+                            var updatedBoardForClient = ConvertBoardForClient(updatedGame);
 
                             // Notify about AI's first move
                             await _hubContext.Clients.Group(game.Id).SendAsync("MoveMade", new
@@ -171,6 +178,7 @@ public class GameHub : Hub
                     PlayerId = playerId,
                     PlayerName = playerName,
                     CharacterIcon = game.Player1?.CharacterIcon.ToString(),
+                    BoardSize = game.BoardSize,
                     State = game.State.ToString(),
                     IsPrivate = game.IsPrivate
                 });
@@ -228,6 +236,7 @@ public class GameHub : Hub
                     Name = game.CurrentPlayer?.Name, 
                     CharacterIcon = game.CurrentPlayer?.CharacterIcon.ToString()
                 },
+                BoardSize = game.BoardSize,
                 State = game.State.ToString()
             });
 
@@ -261,15 +270,7 @@ public class GameHub : Hub
             }
 
             // Create board representation for client
-            var boardForClient = new string[3][];
-            for (int i = 0; i < 3; i++)
-            {
-                boardForClient[i] = new string[3];
-                for (int j = 0; j < 3; j++)
-                {
-                    boardForClient[i][j] = CellStateToCharacterIcon(game.Board[i, j], game);
-                }
-            }
+            var boardForClient = ConvertBoardForClient(game);
 
             // Notify all players about the move
             await Clients.Group(gameId).SendAsync("MoveMade", new
@@ -300,15 +301,7 @@ public class GameHub : Hub
                     if (updatedGame != null)
                     {
                         // Create updated board representation
-                        var updatedBoardForClient = new string[3][];
-                        for (int i = 0; i < 3; i++)
-                        {
-                            updatedBoardForClient[i] = new string[3];
-                            for (int j = 0; j < 3; j++)
-                            {
-                                updatedBoardForClient[i][j] = CellStateToCharacterIcon(updatedGame.Board[i, j], updatedGame);
-                            }
-                        }
+                        var updatedBoardForClient = ConvertBoardForClient(updatedGame);
 
                         // Notify about AI move
                         await _hubContext.Clients.Group(gameId).SendAsync("MoveMade", new
@@ -406,15 +399,7 @@ public class GameHub : Hub
             }
 
             // Create board representation for client
-            var boardForClient = new string[3][];
-            for (int i = 0; i < 3; i++)
-            {
-                boardForClient[i] = new string[3];
-                for (int j = 0; j < 3; j++)
-                {
-                    boardForClient[i][j] = CellStateToCharacterIcon(game.Board[i, j], game);
-                }
-            }
+            var boardForClient = ConvertBoardForClient(game);
 
             await Clients.Group(gameId).SendAsync("GameReset", new
             {
@@ -441,15 +426,7 @@ public class GameHub : Hub
                     if (updatedGame != null)
                     {
                         // Prepare board for client
-                        var updatedBoard = new string[3][];
-                        for (int i = 0; i < 3; i++)
-                        {
-                            updatedBoard[i] = new string[3];
-                            for (int j = 0; j < 3; j++)
-                            {
-                                updatedBoard[i][j] = CellStateToCharacterIcon(updatedGame.Board[i, j], updatedGame);
-                            }
-                        }
+                        var updatedBoard = ConvertBoardForClient(updatedGame);
 
                         await _hubContext.Clients.Group(gameId).SendAsync("MoveMade", new
                         {
@@ -487,6 +464,44 @@ public class GameHub : Hub
         {
             _logger.LogError(ex, "Error resetting game");
             await Clients.Caller.SendAsync("Error", "Failed to reset game");
+        }
+    }
+
+    public async Task LeaveGame()
+    {
+        try
+        {
+            var playerId = Context.ConnectionId;
+            var game = await _gameService.GetGameByPlayerAsync(playerId);
+            
+            if (game != null)
+            {
+                var leavingPlayer = game.Player1?.Id == playerId ? game.Player1 : game.Player2;
+                
+                if (leavingPlayer != null)
+                {
+                    // Notify other players about the player leaving
+                    await Clients.Group(game.Id).SendAsync("PlayerDisconnected", new
+                    {
+                        GameId = game.Id,
+                        PlayerId = playerId,
+                        PlayerName = leavingPlayer.Name
+                    });
+                }
+                
+                // Remove player from the game
+                await _gameService.RemovePlayerAsync(playerId);
+                
+                // Remove the player from the game group
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, game.Id);
+                
+                _logger.LogInformation($"Player {leavingPlayer?.Name} left game {game.Id}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error leaving game");
+            await Clients.Caller.SendAsync("Error", "Failed to leave game");
         }
     }
 

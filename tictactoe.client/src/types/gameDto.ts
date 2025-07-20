@@ -12,6 +12,7 @@ export interface GameDto extends BaseDto {
   player2Id?: string;
   player2Name?: string;
   player2Character?: CharacterIcon;
+  boardSize: number;
   isPrivate: boolean;
   state: GameState;
   result: GameResult;
@@ -27,6 +28,7 @@ export interface GameDto extends BaseDto {
 export interface CreateGameRequest {
   player1Name: string;
   player1Character: CharacterIcon;
+  boardSize: number;
   isPrivate: boolean;
 }
 
@@ -34,6 +36,7 @@ export interface UpdateGameRequest {
   player2Id?: string;
   player2Name?: string;
   player2Character?: CharacterIcon;
+  boardSize?: number;
   state?: GameState;
   result?: GameResult;
   winnerId?: string;

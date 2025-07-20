@@ -31,6 +31,9 @@ public class GameEntity : BaseEntity
     public CharacterIcon? Player2Character { get; set; }
 
     [Required]
+    public int BoardSize { get; set; } = 3;
+
+    [Required]
     public bool IsPrivate { get; set; } = false;
 
     [Required]
