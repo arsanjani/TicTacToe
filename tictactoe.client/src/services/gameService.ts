@@ -95,13 +95,13 @@ export class GameService {
     }
   }
 
-  async createGame(playerName: string, characterIcon: CharacterIcon, isPrivate: boolean = false, playWithAI: boolean = false): Promise<void> {
+  async createGame(playerName: string, characterIcon: CharacterIcon, boardSize: number = 3, isPrivate: boolean = false, playWithAI: boolean = false): Promise<void> {
     if (!this.isConnected) {
       throw new Error('Not connected to game hub');
     }
 
     try {
-      await this.connection.invoke('CreateGame', playerName, characterIcon, isPrivate, playWithAI);
+      await this.connection.invoke('CreateGame', playerName, characterIcon, boardSize, isPrivate, playWithAI);
     } catch (error) {
       console.error('Failed to create game:', error);
       throw error;
@@ -156,6 +156,19 @@ export class GameService {
       await this.connection.invoke('ResetGame', gameId);
     } catch (error) {
       console.error('Failed to reset game:', error);
+      throw error;
+    }
+  }
+
+  async leaveGame(): Promise<void> {
+    if (!this.isConnected) {
+      throw new Error('Not connected to game hub');
+    }
+
+    try {
+      await this.connection.invoke('LeaveGame');
+    } catch (error) {
+      console.error('Failed to leave game:', error);
       throw error;
     }
   }

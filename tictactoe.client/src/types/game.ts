@@ -28,6 +28,7 @@ export interface Game {
   player1: Player | null;
   player2: Player | null;
   board: string[][];
+  boardSize: number;
   state: GameState;
   result: GameResult;
   currentPlayer: Player | null;
@@ -68,6 +69,7 @@ export interface GameCreatedEvent {
   playerId: string;
   playerName: string;
   characterIcon: CharacterIcon;
+  boardSize: number;
   state: string;
   isPrivate: boolean;
 }
@@ -77,6 +79,7 @@ export interface GameStartedEvent {
   player1: Player;
   player2: Player;
   currentPlayer: Player;
+  boardSize: number;
   state: string;
 }
 

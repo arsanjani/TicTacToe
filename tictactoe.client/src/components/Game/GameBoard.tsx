@@ -24,8 +24,7 @@ const GameBoard = ({ gameState }: GameBoardProps) => {
 
     if (confirmed) {
       await leaveGame();
-      // Redirect to home page after leaving
-      window.location.href = '/';
+      // The App component will automatically show the lobby when currentGame becomes null
     }
   };
 
@@ -84,7 +83,7 @@ const GameBoard = ({ gameState }: GameBoardProps) => {
   return (
     <div className="game-board">
       <div className="board-container">
-        <div className="board">
+        <div className={`board board-${currentGame.boardSize}x${currentGame.boardSize}`}>
           {currentGame.board.map((row, rowIndex) =>
             row.map((_, colIndex) => (
               <div

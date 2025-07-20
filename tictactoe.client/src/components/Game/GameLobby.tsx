@@ -11,6 +11,7 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
   const { createGame, isConnected, error } = gameState;
   const [playerName, setPlayerName] = useState('');
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterIcon>(CharacterIcon.Cross);
+  const [boardSize, setBoardSize] = useState(3);
   const [isCreating, setIsCreating] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
   const [playWithAI, setPlayWithAI] = useState(false);
@@ -20,7 +21,7 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
     
     setIsCreating(true);
     try {
-      await createGame(playerName.trim(), selectedCharacter, isPrivate, playWithAI);
+      await createGame(playerName.trim(), selectedCharacter, boardSize, isPrivate, playWithAI);
     } finally {
       setIsCreating(false);
     }
@@ -68,6 +69,38 @@ const GameLobby = ({ gameState }: GameLobbyProps) => {
                     <span className="lobby-character-name">{characterInfo.displayName}</span>
                   </div>
                 ))}
+              </div>
+            </div>
+            
+            <div className="lobby-input-group">
+              <label>Board Size</label>
+              <div className="lobby-board-size-selection">
+                <div
+                  className={`lobby-board-size-option ${boardSize === 3 ? 'selected' : ''}`}
+                  onClick={() => setBoardSize(3)}
+                >
+                  <div className="lobby-board-preview">
+                    <div className="lobby-preview-grid grid-3x3">
+                      {Array.from({ length: 9 }).map((_, i) => (
+                        <div key={i} className="lobby-preview-cell"></div>
+                      ))}
+                    </div>
+                  </div>
+                  <span className="lobby-board-size-label">3x3 Classic</span>
+                </div>
+                <div
+                  className={`lobby-board-size-option ${boardSize === 4 ? 'selected' : ''}`}
+                  onClick={() => setBoardSize(4)}
+                >
+                  <div className="lobby-board-preview">
+                    <div className="lobby-preview-grid grid-4x4">
+                      {Array.from({ length: 16 }).map((_, i) => (
+                        <div key={i} className="lobby-preview-cell"></div>
+                      ))}
+                    </div>
+                  </div>
+                  <span className="lobby-board-size-label">4x4 Extended</span>
+                </div>
               </div>
             </div>
             

@@ -26,7 +26,7 @@ export interface GameStateHook {
   // Game actions
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
-  createGame: (playerName: string, characterIcon: CharacterIcon, isPrivate?: boolean, playWithAI?: boolean) => Promise<void>;
+  createGame: (playerName: string, characterIcon: CharacterIcon, boardSize?: number, isPrivate?: boolean, playWithAI?: boolean) => Promise<void>;
   joinGame: (gameId: string, playerName: string, characterIcon: CharacterIcon) => Promise<void>;
   makeMove: (row: number, col: number) => Promise<void>;
   getWaitingGames: () => Promise<void>;
@@ -66,7 +66,8 @@ export const useGameState = (): GameStateHook => {
         joinedAt: new Date()
       },
       player2: null,
-      board: Array(3).fill(null).map(() => Array(3).fill('')),
+      board: Array(event.boardSize).fill(null).map(() => Array(event.boardSize).fill('')),
+      boardSize: event.boardSize,
       state: GameState.WaitingForPlayers,
       result: GameResult.None,
       currentPlayer: null,
@@ -87,6 +88,7 @@ export const useGameState = (): GameStateHook => {
           player1: event.player1,
           player2: event.player2,
           currentPlayer: event.currentPlayer,
+          boardSize: event.boardSize,
           state: GameState.InProgress,
           startedAt: new Date()
         };
@@ -97,7 +99,8 @@ export const useGameState = (): GameStateHook => {
         id: event.gameId,
         player1: event.player1,
         player2: event.player2,
-        board: Array(3).fill(null).map(() => Array(3).fill('')),
+        board: Array(event.boardSize).fill(null).map(() => Array(event.boardSize).fill('')),
+        boardSize: event.boardSize,
         state: GameState.InProgress,
         result: GameResult.None,
         currentPlayer: event.currentPlayer,
@@ -212,9 +215,9 @@ export const useGameState = (): GameStateHook => {
   }, []);
 
   // Game actions
-  const createGame = useCallback(async (playerName: string, characterIcon: CharacterIcon, isPrivate: boolean = false, playWithAI: boolean = false) => {
+  const createGame = useCallback(async (playerName: string, characterIcon: CharacterIcon, boardSize: number = 3, isPrivate: boolean = false, playWithAI: boolean = false) => {
     try {
-      await gameService.createGame(playerName, characterIcon, isPrivate, playWithAI);
+      await gameService.createGame(playerName, characterIcon, boardSize, isPrivate, playWithAI);
       setError(null);
     } catch (error) {
       setError(`Failed to create game: ${error}`);
@@ -265,11 +268,11 @@ export const useGameState = (): GameStateHook => {
     if (!currentGame) return;
 
     try {
-      await gameService.disconnect();
-      setIsConnected(false);
-      setConnectionState(gameService.getConnectionState());
+      // Call the server's LeaveGame method to properly clean up the game state
+      await gameService.leaveGame();
+      
+      // Clear the local game state
       setCurrentGame(null);
-      setCurrentPlayerId(null);
       setError(null);
     } catch (error) {
       setError(`Failed to leave game: ${error}`);

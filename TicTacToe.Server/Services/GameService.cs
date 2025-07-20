@@ -9,7 +9,7 @@ namespace TicTacToe.Server.Services;
 
 public interface IGameService
 {
-    Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false, bool playWithAI = false);
+    Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, int boardSize = 3, bool isPrivate = false, bool playWithAI = false);
     Task<Game?> JoinGameAsync(string gameId, string playerId, string playerName, CharacterIcon characterIcon);
     Task<Game?> GetGameAsync(string gameId);
     Task<Game?> GetGameByPlayerAsync(string playerId);
@@ -71,6 +71,7 @@ public class GameService : IGameService
             Player2Id = game.Player2?.Id,
             Player2Name = game.Player2?.Name,
             Player2Character = game.Player2?.CharacterIcon,
+            BoardSize = game.BoardSize,
             IsPrivate = game.IsPrivate,
             State = game.State,
             Result = game.Result,
@@ -87,9 +88,9 @@ public class GameService : IGameService
         };
     }
 
-    public async Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, bool isPrivate = false, bool playWithAI = false)
+    public async Task<Game> CreateGameAsync(string playerId, string playerName, CharacterIcon characterIcon, int boardSize = 3, bool isPrivate = false, bool playWithAI = false)
     {
-        var game = new Game
+        var game = new Game(boardSize)
         {
             Id = Guid.NewGuid().ToString(),
             Player1 = new Player
@@ -343,7 +344,7 @@ public class GameService : IGameService
             return false;
 
         // Reset game state
-        game.Board = new CellState[3, 3];
+        game.Board = new CellState[game.BoardSize, game.BoardSize];
         game.State = GameState.InProgress;
         game.Result = GameResult.None;
         game.CurrentPlayer = SelectRandomFirstPlayer(game); // Randomly select first player for fairness
@@ -406,31 +407,37 @@ public class GameService : IGameService
         var humanCellState = GetPlayerCellState(game.Player1);
 
         // 1. Try to win
-        var winMove = FindWinningMove(game.Board, aiCellState);
+        var winMove = FindWinningMove(game.Board, aiCellState, game.BoardSize);
         if (winMove.row != -1) return winMove;
 
         // 2. Block opponent from winning
-        var blockMove = FindWinningMove(game.Board, humanCellState);
+        var blockMove = FindWinningMove(game.Board, humanCellState, game.BoardSize);
         if (blockMove.row != -1) return blockMove;
 
-        // 3. Take center if available
-        if (game.Board[1, 1] == CellState.Empty)
-            return (1, 1);
+        // 3. Take center if available (for odd board sizes)
+        if (game.BoardSize % 2 == 1)
+        {
+            int center = game.BoardSize / 2;
+            if (game.Board[center, center] == CellState.Empty)
+                return (center, center);
+        }
 
         // 4. Take corners
-        var corners = new[] { (0, 0), (0, 2), (2, 0), (2, 2) };
+        var corners = new[] { (0, 0), (0, game.BoardSize - 1), (game.BoardSize - 1, 0), (game.BoardSize - 1, game.BoardSize - 1) };
         foreach (var (r, c) in corners)
         {
             if (game.Board[r, c] == CellState.Empty)
                 return (r, c);
         }
 
-        // 5. Take edges
-        var edges = new[] { (0, 1), (1, 0), (1, 2), (2, 1) };
-        foreach (var (r, c) in edges)
+        // 5. Take any available position
+        for (int row = 0; row < game.BoardSize; row++)
         {
-            if (game.Board[r, c] == CellState.Empty)
-                return (r, c);
+            for (int col = 0; col < game.BoardSize; col++)
+            {
+                if (game.Board[row, col] == CellState.Empty)
+                    return (row, col);
+            }
         }
 
         return (-1, -1); // No move available
@@ -439,11 +446,11 @@ public class GameService : IGameService
     /// <summary>
     /// Find a winning move for the given player
     /// </summary>
-    private (int row, int col) FindWinningMove(CellState[,] board, CellState playerCellState)
+    private (int row, int col) FindWinningMove(CellState[,] board, CellState playerCellState, int boardSize)
     {
-        for (int row = 0; row < 3; row++)
+        for (int row = 0; row < boardSize; row++)
         {
-            for (int col = 0; col < 3; col++)
+            for (int col = 0; col < boardSize; col++)
             {
                 if (board[row, col] == CellState.Empty)
                 {
@@ -451,7 +458,7 @@ public class GameService : IGameService
                     board[row, col] = playerCellState;
                     
                     // Check if this creates a win
-                    bool isWin = CheckWinCondition(board, playerCellState);
+                    bool isWin = CheckWinCondition(board, playerCellState, boardSize);
                     
                     // Undo the move
                     board[row, col] = CellState.Empty;
@@ -467,30 +474,49 @@ public class GameService : IGameService
     /// <summary>
     /// Check if the given player has won
     /// </summary>
-    private bool CheckWinCondition(CellState[,] board, CellState playerCellState)
+    private bool CheckWinCondition(CellState[,] board, CellState playerCellState, int boardSize)
     {
+        int winLength = boardSize; // For dynamic win condition: 3 in a row for 3x3, 4 in a row for 4x4
+
         // Check rows
-        for (int row = 0; row < 3; row++)
+        for (int row = 0; row < boardSize; row++)
         {
-            if (board[row, 0] == playerCellState && board[row, 1] == playerCellState && board[row, 2] == playerCellState)
+            if (CheckLineWin(board, row, 0, 0, 1, winLength, playerCellState))
                 return true;
         }
 
         // Check columns
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < boardSize; col++)
         {
-            if (board[0, col] == playerCellState && board[1, col] == playerCellState && board[2, col] == playerCellState)
+            if (CheckLineWin(board, 0, col, 1, 0, winLength, playerCellState))
                 return true;
         }
 
-        // Check diagonals
-        if (board[0, 0] == playerCellState && board[1, 1] == playerCellState && board[2, 2] == playerCellState)
+        // Check main diagonal (top-left to bottom-right)
+        if (CheckLineWin(board, 0, 0, 1, 1, winLength, playerCellState))
             return true;
 
-        if (board[0, 2] == playerCellState && board[1, 1] == playerCellState && board[2, 0] == playerCellState)
+        // Check anti-diagonal (top-right to bottom-left)
+        if (CheckLineWin(board, 0, boardSize - 1, 1, -1, winLength, playerCellState))
             return true;
 
         return false;
+    }
+
+    /// <summary>
+    /// Check if a line has the required number of consecutive pieces
+    /// </summary>
+    private bool CheckLineWin(CellState[,] board, int startRow, int startCol, int deltaRow, int deltaCol, int winLength, CellState playerCellState)
+    {
+        for (int i = 0; i < winLength; i++)
+        {
+            int row = startRow + i * deltaRow;
+            int col = startCol + i * deltaCol;
+            
+            if (row >= board.GetLength(0) || col >= board.GetLength(1) || col < 0 || board[row, col] != playerCellState)
+                return false;
+        }
+        return true;
     }
 
     /// <summary>
