@@ -5,6 +5,8 @@
   gap: 1rem;
   margin-top: 0.5rem;
   padding: 0.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
   scrollbar-width: thin;
   scrollbar-color: #667eea #f0f0f0;
   scroll-behavior: smooth;
@@ -42,6 +44,7 @@
   backdrop-filter: blur(5px);
   min-width: 100px;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .waiting-character-option:hover {
@@ -189,6 +192,9 @@
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(5px);
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .waiting-player-name-input:focus {
@@ -238,6 +244,19 @@
 }
 
 @media (max-width: 767px) {
+  .waiting-room {
+    padding: 1rem;
+  }
+  
+  .waiting-container {
+    padding: 1.5rem;
+  }
+  
+  .waiting-character-selection {
+    gap: 0.75rem;
+    padding: 0.5rem;
+  }
+  
   .waiting-character-option {
     padding: 0.5rem;
     min-width: 80px;
@@ -256,6 +275,7 @@
     flex-direction: column;
     text-align: center;
     gap: 0.75rem;
+    padding: 1rem;
   }
   
   .waiting-player-icon {
@@ -272,6 +292,20 @@
   .waiting-game-creator-icon {
     width: 35px;
     height: 35px;
+  }
+  
+  .waiting-games-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .waiting-share-link {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .waiting-copy-button {
+    width: 100%;
   }
 }
 
@@ -296,14 +330,23 @@
   }
 }
 
+/* Universal box-sizing for waiting room */
+.waiting-room *,
+.waiting-room *::before,
+.waiting-room *::after {
+  box-sizing: border-box;
+}
+
 .waiting-room {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  max-width: 100vw;
   padding: 2rem;
   min-height: 100vh;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .waiting-container {
@@ -311,10 +354,10 @@
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  width: 100%;
+  max-width: min(800px, calc(100vw - 0.9rem));
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  box-sizing: border-box;
 }
 
 .waiting-header {
@@ -369,6 +412,8 @@
   font-size: 0.9rem;
   background: rgba(255, 255, 255, 0.8);
   color: #333;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .waiting-copy-button {
@@ -432,8 +477,10 @@
 
 .waiting-games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .waiting-game-card {
@@ -686,6 +733,63 @@
   
   .waiting-character-selection::-webkit-scrollbar-track {
     background: #333;
+  }
+}
+
+/* Extra Small Screens for Waiting Room */
+@media (max-width: 359px) {
+  .waiting-room {
+    padding: 0.5rem;
+  }
+  
+  .waiting-container {
+    padding: 1rem;
+    margin: 0;
+  }
+  
+  .waiting-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .waiting-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .waiting-character-selection {
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+  
+  .waiting-character-option {
+    min-width: 70px;
+    padding: 0.4rem;
+  }
+  
+  .waiting-character-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .waiting-character-name {
+    font-size: 0.65rem;
+  }
+  
+  .waiting-player-card {
+    padding: 0.75rem;
+  }
+  
+  .waiting-player-icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .waiting-game-card {
+    padding: 1rem;
+  }
+  
+  .waiting-game-creator-icon {
+    width: 30px;
+    height: 30px;
   }
 } 
 

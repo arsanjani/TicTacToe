@@ -1,9 +1,19 @@
+/* Universal box-sizing for lobby */
+.lobby-game-lobby *,
+.lobby-game-lobby *::before,
+.lobby-game-lobby *::after {
+  box-sizing: border-box;
+}
+
 .lobby-game-lobby {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  max-width: 100vw;
   padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .lobby-container {
@@ -11,11 +21,11 @@
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  width: 100%;
+  max-width: min(800px, calc(100vw - 0.9rem));
   text-align: center;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  box-sizing: border-box;
 }
 
 .lobby-header {
@@ -96,9 +106,9 @@
   transition: all 0.3s ease;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  width: unset !important;
-  max-width: unset !important;
-  max-width: -webkit-fill-available !important;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .lobby-player-name-input:focus {
@@ -194,6 +204,8 @@
   gap: 1rem;
   margin-top: 0.5rem;
   padding: 0.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
   scrollbar-width: thin;
   scrollbar-color: #667eea #f0f0f0;
   scroll-behavior: smooth;
@@ -231,6 +243,7 @@
   backdrop-filter: blur(5px);
   min-width: 100px;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .lobby-character-option:hover {
@@ -282,17 +295,19 @@
 /* Board Size Selection Styles */
 .lobby-board-size-selection {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   justify-content: center;
   margin-top: 0.5rem;
   flex-wrap: wrap;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .lobby-board-size-option {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
+  padding: 0.75rem;
   background: rgba(255, 255, 255, 0.8);
   border: 2px solid rgba(102, 126, 234, 0.3);
   border-radius: 12px;
@@ -300,8 +315,10 @@
   transition: all 0.3s ease;
   text-align: center;
   backdrop-filter: blur(5px);
-  min-width: 120px;
-  flex-shrink: 0;
+  min-width: 100px;
+  max-width: 140px;
+  flex: 1 1 auto;
+  box-sizing: border-box;
 }
 
 .lobby-board-size-option:hover {
@@ -747,11 +764,11 @@
 /* Mobile Small (320px - 479px) */
 @media (max-width: 479px) {
   .lobby-game-lobby {
-    padding: 1rem;
+    padding: 0.5rem;
   }
   
   .lobby-container {
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 12px;
   }
   
@@ -812,6 +829,51 @@
   .lobby-connection-status {
     padding: 1rem;
     font-size: 0.9rem;
+  }
+}
+
+/* Extra Small Screens (less than 360px) */
+@media (max-width: 359px) {
+  .lobby-game-lobby {
+    padding: 0.25rem;
+  }
+  
+  .lobby-container {
+    padding: 0.75rem;
+    margin: 0;
+  }
+  
+  .lobby-character-selection {
+    gap: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .lobby-character-option {
+    min-width: 80px;
+    padding: 0.5rem;
+  }
+  
+  .lobby-character-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .lobby-character-name {
+    font-size: 0.65rem;
+  }
+  
+  .lobby-board-size-selection {
+    gap: 0.5rem;
+  }
+  
+  .lobby-board-size-option {
+    min-width: 80px;
+    padding: 0.5rem;
+  }
+  
+  .lobby-preview-grid {
+    width: 50px;
+    height: 50px;
   }
 }
 
@@ -981,5 +1043,13 @@
     background: rgba(255, 255, 255, 0.05);
     color: #c0c0c0;
     border-left: 4px solid #667eea;
+  }
+  
+  .lobby-character-selection {
+    scrollbar-color: #667eea #333;
+  }
+  
+  .lobby-character-selection::-webkit-scrollbar-track {
+    background: #333;
   }
 } 
